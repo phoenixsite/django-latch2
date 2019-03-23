@@ -7,12 +7,31 @@
 # Editor temp files:
 *.swp
 *~
+
+# VisualStudioCode
+.vscode/*
+
+# VisualStudioCode Patch
+.history
+
 # Sphinx docs:
 build
+
 # SQLite3 database files:
 *.db
+
 # Logs:
 *.log
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+coverage.xml
+*.cover
 
 ._*.html
 .DS_Store
