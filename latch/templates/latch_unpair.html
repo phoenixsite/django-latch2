@@ -1,7 +1,10 @@
-{% extends "base.html" %}
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></div>{% endblock %}
 {% block content %}
-<form action="{% url "latch_unpair" %}"  method="POST" class="form" role="form">{% csrf_token %}
+<form action="{% url "latch_unpair" %}" method="post" >
+{% csrf_token %}
 {{ form.as_p }}
-<button class="btn btn-lg btn-primary btn-block" type="submit">UnPair</button>
+<input type="submit" value="Unpair">
 </form>
 {% endblock %}

@@ -1,9 +1,9 @@
-from django.conf.urls import patterns, include, url
-from django.conf.urls.i18n import i18n_patterns
+# pylint: disable=invalid-name
+from django.urls import path
+from latch import views
 
-urlpatterns = patterns('',
-    url(r'^pair/+$', 'latch.views.pair', name='latch_pair'),
-    url(r'^unpair/+$', 'latch.views.unpair', name='latch_unpair'),
-    # This can be disabled if you want to hide the status for your application. 
-    url(r'^status/+$', 'latch.views.status', name='latch_status'),
-)
+urlpatterns = [
+    path("pair/", views.pair, name="latch_pair"),
+    path("unpair/", views.unpair, name="latch_unpair"),
+    path("status/", views.status, name="latch_status"),
+]

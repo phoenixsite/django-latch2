@@ -1,17 +1,19 @@
 from django.forms import ModelForm
 from django import forms
-from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.forms import AuthenticationForm
-from .models import *
+
+from latch.models import LatchSetup
+
 
 class LatchPairForm(forms.Form):
-	latch_pin = forms.CharField()
+    latch_pin = forms.CharField()
+
 
 class LatchSetupForm(ModelForm):
-	class Meta:
-		model = LatchSetup
-	#latch_appid = form.CharField()
-	#latch_secret = form.CharField()
+    exclude = []
+    class Meta:
+        model = LatchSetup
+        fields = '__all__'
+
 
 class LatchUnpairForm(forms.Form):
-	latch_confirm = forms.BooleanField()
+    latch_confirm = forms.BooleanField()

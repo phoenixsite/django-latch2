@@ -8,7 +8,7 @@ Installation
 
 To install it, simply: ::
    
-    git clone https://github.com/rootedcon/django-latch.git
+    git clone https://github.com/javimoral/django-latch.git
     cd django-latch
     python setup.py install
 
@@ -17,16 +17,15 @@ To install it, simply: ::
 Requirements
 ------------
 
-- Python 2.6 or 2.7
-- Django >= 1.5
+- Python > 3.5
+- Django >= 2.0
 
-It may work with Python 3 and Django < 1.5 but is not tested
 
 
 Configuration
 -------------
 
-- not yet completed
+- TO-DO
 
 
 In your ``settings.py`` file you need to add the following directives:
@@ -64,7 +63,7 @@ Bugs and requests
 
 Please report any bug/issue or feature request in GitHub's issue tracker.
 
-https://github.com/rootedcon/django-latch/issues
+https://github.com/javimoral/django-latch/issues
 
 
 License
@@ -78,5 +77,5 @@ https://github.com/ElevenPaths/latch-sdk-python
 Author
 ------
 
-Developed by Javier Olascoaga and RootedCON 
+Originaly developed by Javier Olascoaga and RootedCON
 

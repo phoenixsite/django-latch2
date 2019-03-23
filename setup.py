@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from setuptools import setup
+import setuptools
 
-setup(
+setuptools.setup(
     name='django-latch',
-    version='0.1',
+    version='0.2',
     description='Django latch module.',
     long_description='Django module for integrating latch with django',
-    author='Javier Olascoaga',
-    author_email='jolascoaga@rootedcon.es',
+    author='Javier Moral',
+    author_email='moraljlara@gmail.com',
     license='Apache License 2.0',
-    url='https://github.com/rootedcon/django-latch',
-    packages= [ 'latch'],
+    url='https://github.com/moraljlara/django-latch',
+    packages=setuptools.find_packages(),
     install_requires=[
-        "Django>=1.5",
+        "Django>=2.0",
     ],
     include_package_data=True,
     classifiers=[
