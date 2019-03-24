@@ -8,9 +8,9 @@ from django.contrib.auth.models import AnonymousUser
 
 from latch import views
 
-from . import LatchTest
+from . import FactoryTestMixin, LatchTest
 
-class UnpairingTests(LatchTest):
+class UnpairingTests(FactoryTestMixin, LatchTest):
     def test_pair_form_not_accesible_for_anonymous_user(self):
         request = self.factory.get("/pair")
         request.user = AnonymousUser()

@@ -5,17 +5,25 @@ from http.client import HTTPException
 from unittest.mock import patch
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.models import User, AnonymousUser
 
 from latch import views
 from latch.models import UserProfile
 
 from latch import latch_sdk_python as sdk
 
-from . import LatchTest
+from . import FactoryTestMixin, LatchTest
 
 
-class PairingTests(LatchTest):
+class PairingTests(FactoryTestMixin, LatchTest):
+    def setUp(self):
+        # Override the unpaired user to be written on an per-test basis.
+        # If not, once we run the test_pairing_with_correct_code
+        # tests reliying of unpaired users will fail
+        self.unpaired_user = User.objects.create_user(
+            username="unpaired_user", email="unpaired_user@mail.com", password="password"
+        )
+
     def test_pair_form_not_accesible_for_anonymous_user(self):
         request = self.factory.get("/pair")
         request.user = AnonymousUser()
@@ -91,6 +99,7 @@ class PairingTests(LatchTest):
         request.user = self.unpaired_user
 
         response = views.pair(request)
+        print(response.content.decode("utf-8"))
 
         self.assertContains(response, "Account not paired with Latch")
 

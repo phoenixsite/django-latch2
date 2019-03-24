@@ -1,9 +1,9 @@
 from latch import views
 from latch.models import LatchSetup
 
-from . import LatchTest
+from . import FactoryTestMixin, LatchTest
 
-class UnconfiguredTest(LatchTest):
+class UnconfiguredTest(FactoryTestMixin, LatchTest):
     def setUp(self):
         super().setUp()
         LatchSetup.objects.get(pk=1).delete()

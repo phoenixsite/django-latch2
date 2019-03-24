@@ -8,10 +8,10 @@ from latch import views
 from latch.models import LatchSetup
 from latch import latch_sdk_python as sdk
 
-from . import LatchTest
+from . import FactoryTestMixin, LatchTest
 
 
-class StatusTest(LatchTest):
+class StatusTest(FactoryTestMixin, LatchTest):
     @patch("latch.latch_sdk_python.latchapp.LatchApp.status")
     def test_show_yes_if_latch_is_configured(self, mock_status):
         mock_status.return_value = sdk.latchresponse.LatchResponse(
