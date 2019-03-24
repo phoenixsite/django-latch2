@@ -99,7 +99,6 @@ class PairingTests(FactoryTestMixin, LatchTest):
         request.user = self.unpaired_user
 
         response = views.pair(request)
-        print(response.content.decode("utf-8"))
 
         self.assertContains(response, "Account not paired with Latch")
 
