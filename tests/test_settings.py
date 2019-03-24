@@ -37,6 +37,7 @@ AUTH_PROFILE_MODULE = 'latch.UserProfile'
 
 AUTHENTICATION_BACKENDS = [
     'latch.auth_backend.LatchAuthBackend',
+    'django.contrib.auth.backends.ModelBackend'
 ]
 
 TEMPLATES = [

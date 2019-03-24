@@ -38,11 +38,14 @@ In your ``settings.py`` file you need to add the following directives:
     # Add auth profile 
     AUTH_PROFILE_MODULE='latch.UserProfile'
     
-    # Add the authentication backend
-    AUTHENTICATION_BACKENDS = (
-            'latch.auth_backend.LatchAuthBackend',
-    )
+    # Append Latch Auth Backend the first in list
+    AUTHENTICATION_BACKENDS = [
+        'latch.auth_backend.LatchAuthBackend',
+        'django.contrib.auth.backends.ModelBackend'
+    ]
 ```
+
+Latch doesn't care about the authentication mechanism, just stops authentication process when the account is locked. That's why you must rely on another authentication backends, putting LatchAuthBackend first in the list.
 
 We create some models in database, so you must apply migrations after installing the app.
 
