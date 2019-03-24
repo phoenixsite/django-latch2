@@ -43,9 +43,17 @@ In your ``settings.py`` file you need to add the following directives:
         'latch.auth_backend.LatchAuthBackend',
         'django.contrib.auth.backends.ModelBackend'
     ]
+
+    LATCH_BYPASS_WHEN_UNREACHABLE = True # True is the default behaviour. Configure as you need.
 ```
 
 Latch doesn't care about the authentication mechanism, just stops authentication process when the account is locked. That's why you must rely on another authentication backends, putting LatchAuthBackend first in the list.
+
+`LATCH_BYPASS_WHEN_UNREACHABLE` controls the behaviour when Latch service is unreachable.
+
+If left unconfigured or set to `True` login attempts of paired accounts will be granted permission when connections with Latch service fails.
+If set to `False` login attempts of paired accounts will be denied when connections with Latch service fails.
+
 
 We create some models in database, so you must apply migrations after installing the app.
 

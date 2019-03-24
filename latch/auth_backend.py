@@ -1,7 +1,11 @@
 # pylint: disable=invalid-name,protected-access
+from http.client import HTTPException
+
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
+from django.conf import settings
+
 from latch.models import LatchSetup, UserProfile
 
 
@@ -14,6 +18,8 @@ class LatchAuthBackend(ModelBackend):
         The methods delegate to the next authentication backend, by returning None when:
         * User's account has paired with Latch and account is unlocked.
         * User's account hasn't paired with Latch.
+        * When settings.LATCH_BYPASS_WHEN_UNREACHABLE is not set, or is set to True,
+        and user's account has paired but Latch is unreachable.
         """
         UserModel = get_user_model()
         if username is None:
@@ -30,8 +36,12 @@ class LatchAuthBackend(ModelBackend):
         if not LatchSetup.objects.exists() or not UserProfile.accountid(user):
             # Always return on if is not configured or the user does not have latch configured
             return True
-        l = LatchSetup.instance()
-        # We need to extend the User Config to
-        status_response = l.status(UserProfile.accountid(user))
-        data = status_response.get_data()
-        return data["operations"][LatchSetup.appid()]["status"] == "on"
+
+        try:
+            latch_instance = LatchSetup.instance()
+            status_response = latch_instance.status(UserProfile.accountid(user))
+            data = status_response.get_data()
+            return data["operations"][LatchSetup.appid()]["status"] == "on"
+        except HTTPException:
+            bypass = getattr(settings, "LATCH_BYPASS_WHEN_UNREACHABLE", True)
+            return bool(bypass)

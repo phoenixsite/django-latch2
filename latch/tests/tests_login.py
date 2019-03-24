@@ -1,9 +1,10 @@
 import json
 
+from http.client import HTTPException
 from unittest.mock import MagicMock, patch
+from django.test import override_settings
 
 from latch import latch_sdk_python as sdk
-
 from . import LatchTest
 
 ON_MOCK = MagicMock(
@@ -38,6 +39,10 @@ OFF_MOCK = MagicMock(
             }
         )
     )
+)
+
+ERR_MOCK = MagicMock(
+    side_effect=HTTPException("Generic HTTP Exception")
 )
 
 
@@ -76,3 +81,22 @@ class LoginUnpairedUserTest(LatchTest):
             self.client.login(username="unpaired", password="wrong"), False
         )
         self.assertEqual(mock_status.called, False)
+
+@patch("latch.latch_sdk_python.latchapp.LatchApp.status", new=ERR_MOCK)
+class LoginWithLatchUnreachable(LatchTest):
+    @override_settings(LATCH_BYPASS_WHEN_UNREACHABLE=True)
+    def test_login_correct_when_bypass_activated(self):
+        self.assertEqual(
+            self.client.login(username="paired", password="password"), True
+        )
+
+    @override_settings(LATCH_BYPASS_WHEN_UNREACHABLE=False)
+    def test_login_correct_when_bypass_deactivated(self):
+        self.assertEqual(
+            self.client.login(username="paired", password="password"), False
+        )
+
+    def test_login_correct_when_bypass_has_no_value(self):
+        self.assertEqual(
+            self.client.login(username="paired", password="password"), True
+        )
