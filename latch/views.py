@@ -54,9 +54,9 @@ def process_pair_post(request, template_name="latch_message.html"):
     form = LatchPairForm(request.POST)
     if form.is_valid():
         form.clean()
-        latch = LatchSetup.instance()
+        latch_instance = LatchSetup.instance()
         try:
-            account_id = latch.pair(form.cleaned_data["latch_pin"])
+            account_id = latch_instance.pair(form.cleaned_data["latch_pin"])
             if "accountId" in account_id.get_data():
                 UserProfile.save_user_accountid(request.user, account_id.get_data()["accountId"])
                 context = {
