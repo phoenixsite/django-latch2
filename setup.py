@@ -15,6 +15,15 @@ setuptools.setup(
     install_requires=[
         "Django>=2.0",
     ],
+    data_files=[
+        ('locales', ['latch/locale/es/LC_MESSAGES/django.mo', 'latch/locale/es/LC_MESSAGES/django.po']),
+        ('templates', [
+            'latch/templates/latch_message.html',
+            'latch/templates/latch_pair.html',
+            'latch/templates/latch_status.html',
+            'latch/templates/latch_unpair.html',
+        ])
+    ],
     include_package_data=True,
     classifiers=[
         "Programming Language :: Python",
