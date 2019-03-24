@@ -1,13 +1,18 @@
+import logging
+
 from functools import wraps
 
 from http.client import HTTPException
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 from latch.models import LatchSetup, UserProfile
 from latch.forms import LatchPairForm, LatchUnpairForm
+
+logger = logging.getLogger(__name__)
 
 
 def latch_is_configured(view):
@@ -58,7 +63,9 @@ def process_pair_post(request, template_name="latch_message.html"):
         try:
             account_id = latch_instance.pair(form.cleaned_data["latch_pin"])
             if "accountId" in account_id.get_data():
-                UserProfile.save_user_accountid(request.user, account_id.get_data()["accountId"])
+                UserProfile.save_user_accountid(
+                    request.user, account_id.get_data()["accountId"]
+                )
                 context = {
                     "message": _("Account paired with Latch"),
                     "alert_type": "success",
@@ -69,8 +76,13 @@ def process_pair_post(request, template_name="latch_message.html"):
                     "alert_type": "danger",
                 }
         except HTTPException as err:
+            logger.exception("Couldn't connect with Latch service")
+
+            msg = _("Error pairing the account: %(error)s") % {"error": err} if settings.DEBUG \
+                else _("Error pairing the account")
+
             context = {
-                "message": _("Error pairing the account: %(error)s") % {"error": err},
+                "message": msg,
                 "alert_type": "danger",
             }
 
@@ -110,8 +122,13 @@ def do_unpair(request, template_name="latch_message.html"):
     except UserProfile.DoesNotExist:
         context = {"message": _("Your account has no profile"), "alert_type": "danger"}
     except HTTPException as err:
+        logger.exception("Couldn't connect with Latch service")
+
+        msg = _("Error unpairing the account: %(error)s") % {"error": err} if settings.DEBUG \
+                else _("Error unpairing the account")
+
         context = {
-            "message": _("Error unpairing the account: %(error)s") % {"error": err},
+            "message": msg,
             "alert_type": "danger",
         }
 
@@ -137,6 +154,7 @@ def status(request, template_name="latch_status.html"):
                 account_status = data["applicationId"]["status"]
 
     except HTTPException:
+        logger.exception("Couldn't connect with Latch service")
         return render(request, template_name, {"error": True})
 
     return render(

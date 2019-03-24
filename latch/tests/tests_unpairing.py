@@ -5,6 +5,7 @@ from http.client import HTTPException
 from unittest.mock import patch
 
 from django.contrib.auth.models import AnonymousUser
+from django.test import override_settings
 
 from latch import views
 
@@ -45,6 +46,32 @@ class UnpairingTests(FactoryTestMixin, LatchTest):
 
     @patch("latch.latch_sdk_python.latchapp.LatchApp.unpair")
     def test_shows_error_message_when_cannot_connect_to_latch(self, mock_unpair):
+        mock_unpair.side_effect = HTTPException("HTTP Generic Exception")
+
+        data = {"latch_confirm": True}
+        request = self.factory.post("/unpair", data=data)
+        request.user = self.paired_user
+
+        response = views.unpair(request)
+
+        self.assertContains(response, "Error unpairing the account")
+
+    @override_settings(DEBUG=True)
+    @patch("latch.latch_sdk_python.latchapp.LatchApp.unpair")
+    def test_error_message_shown_when_debug_is_true(self, mock_unpair):
+        mock_unpair.side_effect = HTTPException("HTTP Generic Exception")
+
+        data = {"latch_confirm": True}
+        request = self.factory.post("/unpair", data=data)
+        request.user = self.paired_user
+
+        response = views.unpair(request)
+
+        self.assertContains(response, "Error unpairing the account: HTTP Generic Exception")
+
+    @override_settings(DEBUG=False)
+    @patch("latch.latch_sdk_python.latchapp.LatchApp.unpair")
+    def test_error_message_hidden_when_debug_is_false(self, mock_unpair):
         mock_unpair.side_effect = HTTPException("HTTP Generic Exception")
 
         data = {"latch_confirm": True}

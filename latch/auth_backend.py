@@ -1,4 +1,6 @@
 # pylint: disable=invalid-name,protected-access
+import logging
+
 from http.client import HTTPException
 
 from django.contrib.auth.backends import ModelBackend
@@ -7,6 +9,8 @@ from django.core.exceptions import PermissionDenied
 from django.conf import settings
 
 from latch.models import LatchSetup, UserProfile
+
+logger = logging.getLogger(__name__)
 
 
 class LatchAuthBackend(ModelBackend):
@@ -43,5 +47,9 @@ class LatchAuthBackend(ModelBackend):
             data = status_response.get_data()
             return data["operations"][LatchSetup.appid()]["status"] == "on"
         except HTTPException:
+            logger.exception("Couldn't connect with Latch service")
             bypass = getattr(settings, "LATCH_BYPASS_WHEN_UNREACHABLE", True)
+            if bypass:
+                logger.info("Bypassing login attempt")
+
             return bool(bypass)

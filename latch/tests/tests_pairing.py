@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User, AnonymousUser
+from django.test import override_settings
 
 from latch import views
 from latch.models import UserProfile
@@ -104,6 +105,30 @@ class PairingTests(FactoryTestMixin, LatchTest):
 
     @patch("latch.latch_sdk_python.latchapp.LatchApp.pair")
     def test_pair_failed(self, mock_pair):
+        mock_pair.side_effect = HTTPException("HTTP Generic Exception")
+        data = {"latch_pin": "correc"}
+        request = self.factory.post("/pair", data=data)
+        request.user = self.unpaired_user
+
+        response = views.pair(request)
+
+        self.assertContains(response, "Error pairing the account")
+
+    @override_settings(DEBUG=True)
+    @patch("latch.latch_sdk_python.latchapp.LatchApp.pair")
+    def test_error_message_shown_when_debug_is_true(self, mock_pair):
+        mock_pair.side_effect = HTTPException("HTTP Generic Exception")
+        data = {"latch_pin": "correc"}
+        request = self.factory.post("/pair", data=data)
+        request.user = self.unpaired_user
+
+        response = views.pair(request)
+
+        self.assertContains(response, "Error pairing the account: HTTP Generic Exception")
+
+    @override_settings(DEBUG=False)
+    @patch("latch.latch_sdk_python.latchapp.LatchApp.pair")
+    def test_error_message_hidden_when_debug_is_false(self, mock_pair):
         mock_pair.side_effect = HTTPException("HTTP Generic Exception")
         data = {"latch_pin": "correc"}
         request = self.factory.post("/pair", data=data)
