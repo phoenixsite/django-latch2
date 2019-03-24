@@ -7,6 +7,7 @@ SECRET_KEY = 'fake-key'
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.contenttypes',
+    'django.contrib.sessions',
     'django.contrib.auth',
     'django.contrib.staticfiles',
     'latch',
@@ -35,9 +36,7 @@ DATABASES = {
 AUTH_PROFILE_MODULE = 'latch.UserProfile'
 
 AUTHENTICATION_BACKENDS = [
-    {
-        'NAME': 'latch.auth_backend.LatchAuthBackend',
-    },
+    'latch.auth_backend.LatchAuthBackend',
 ]
 
 TEMPLATES = [
