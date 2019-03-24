@@ -8,12 +8,6 @@ from django.utils.translation import gettext_lazy as _
 
 from latch.models import LatchSetup, UserProfile
 from latch.forms import LatchPairForm, LatchUnpairForm
-from latch.helpers import (
-    instance,
-    accountid,
-    save_user_accountid,
-    delete_user_account_id,
-)
 
 
 def latch_is_configured(view):
@@ -42,7 +36,7 @@ def pair(request, template_name="latch_pair.html"):
     """
     Pairs the current user with a given latch token ID.
     """
-    if accountid(request.user) is not None:
+    if UserProfile.accountid(request.user) is not None:
         return render(
             request,
             "latch_message.html",
@@ -60,11 +54,11 @@ def process_pair_post(request, template_name="latch_message.html"):
     form = LatchPairForm(request.POST)
     if form.is_valid():
         form.clean()
-        latch = instance()
+        latch = LatchSetup.instance()
         try:
             account_id = latch.pair(form.cleaned_data["latch_pin"])
             if "accountId" in account_id.get_data():
-                save_user_accountid(request.user, account_id.get_data()["accountId"])
+                UserProfile.save_user_accountid(request.user, account_id.get_data()["accountId"])
                 context = {
                     "message": _("Account paired with Latch"),
                     "alert_type": "success",
@@ -99,11 +93,11 @@ def unpair(request, template_name="latch_unpair.html"):
 
 def do_unpair(request, template_name="latch_message.html"):
     try:
-        acc_id = accountid(request.user)
+        acc_id = UserProfile.accountid(request.user)
         if acc_id:
-            latch = instance()
-            latch.unpair(accountid(request.user))
-            delete_user_account_id(acc_id)
+            latch = LatchSetup.instance()
+            latch.unpair(UserProfile.accountid(request.user))
+            UserProfile.delete_user_account_id(acc_id)
             context = {
                 "message": _("Latch removed from your account"),
                 "alert_type": "success",
@@ -135,9 +129,9 @@ def status(request, template_name="latch_status.html"):
     account_status = None
     try:
         if configured:
-            acc_id = accountid(request.user)
+            acc_id = UserProfile.accountid(request.user)
             if acc_id:
-                latch_instance = instance()
+                latch_instance = LatchSetup.instance()
                 status_response = latch_instance.status(acc_id)
                 data = status_response.get_data()["operations"]
                 account_status = data["applicationId"]["status"]

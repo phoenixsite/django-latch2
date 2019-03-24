@@ -2,8 +2,7 @@
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from latch.helpers import instance, accountid, appid
-from latch.models import LatchSetup
+from latch.models import LatchSetup, UserProfile
 
 
 class LatchAuthBackend(ModelBackend):
@@ -26,11 +25,11 @@ class LatchAuthBackend(ModelBackend):
             raise ValidationError("There was an unknown error: %s" % err)
 
     def latch_permits_login(self, user):
-        if not LatchSetup.objects.exists() or not accountid(user):
+        if not LatchSetup.objects.exists() or not UserProfile.accountid(user):
             # Always return on if is not configured or the user does not have latch configured
             return True
-        l = instance()
+        l = LatchSetup.instance()
         # We need to extend the User Config to
-        data = l.status(accountid(user))
+        data = l.status(UserProfile.accountid(user))
         d = data.get_data()
-        return d["operations"][appid()]["status"] == "on"
+        return d["operations"][LatchSetup.appid()]["status"] == "on"
