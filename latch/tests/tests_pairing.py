@@ -5,18 +5,16 @@ from http.client import HTTPException
 from unittest.mock import patch
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.auth.models import User
 from django.test import override_settings
 
-from latch import views
 from latch.models import UserProfile
-
 from latch import latch_sdk_python as sdk
 
-from . import FactoryTestMixin, LatchTest
+from . import LatchTest
 
 
-class PairingTests(FactoryTestMixin, LatchTest):
+class PairingTests(LatchTest):
     def setUp(self):
         # Override the unpaired user to be written on an per-test basis.
         # If not, once we run the test_pairing_with_correct_code
@@ -26,18 +24,13 @@ class PairingTests(FactoryTestMixin, LatchTest):
         )
 
     def test_pair_form_not_accesible_for_anonymous_user(self):
-        request = self.factory.get("/pair")
-        request.user = AnonymousUser()
-
-        response = views.pair(request)
+        response = self.client.get("/pair/")
 
         self.assertEqual(response.status_code, 302)
 
     def test_pair_form_shown_in_unpaired_account(self):
-        request = self.factory.get("/pair")
-        request.user = self.unpaired_user
-
-        response = views.pair(request)
+        self.client.force_login(self.unpaired_user)
+        response = self.client.get("/pair/")
 
         self.assertEqual(response.status_code, 200)
 
@@ -48,10 +41,8 @@ class PairingTests(FactoryTestMixin, LatchTest):
         )
 
         data = {"latch_pin": "correc"}
-        request = self.factory.post("/pair", data=data)
-        request.user = self.unpaired_user
-
-        response = views.pair(request)
+        self.client.force_login(self.unpaired_user)
+        response = self.client.post("/pair/", data=data)
 
         self.assertContains(response, "Account paired with Latch")
         user_profile = None
@@ -77,10 +68,8 @@ class PairingTests(FactoryTestMixin, LatchTest):
         )
 
         data = {"latch_pin": "incorr"}
-        request = self.factory.post("/pair", data=data)
-        request.user = self.paired_user
-
-        response = views.pair(request)
+        self.client.force_login(self.paired_user)
+        response = self.client.post("/pair/", data=data)
 
         self.assertContains(response, "Account is already paired")
 
@@ -96,10 +85,8 @@ class PairingTests(FactoryTestMixin, LatchTest):
         )
 
         data = {"latch_pin": "incorr"}
-        request = self.factory.post("/pair", data=data)
-        request.user = self.unpaired_user
-
-        response = views.pair(request)
+        self.client.force_login(self.unpaired_user)
+        response = self.client.post("/pair/", data=data)
 
         self.assertContains(response, "Account not paired with Latch")
 
@@ -107,10 +94,8 @@ class PairingTests(FactoryTestMixin, LatchTest):
     def test_pair_failed(self, mock_pair):
         mock_pair.side_effect = HTTPException("HTTP Generic Exception")
         data = {"latch_pin": "correc"}
-        request = self.factory.post("/pair", data=data)
-        request.user = self.unpaired_user
-
-        response = views.pair(request)
+        self.client.force_login(self.unpaired_user)
+        response = self.client.post("/pair/", data=data)
 
         self.assertContains(response, "Error pairing the account")
 
@@ -119,10 +104,8 @@ class PairingTests(FactoryTestMixin, LatchTest):
     def test_error_message_shown_when_debug_is_true(self, mock_pair):
         mock_pair.side_effect = HTTPException("HTTP Generic Exception")
         data = {"latch_pin": "correc"}
-        request = self.factory.post("/pair", data=data)
-        request.user = self.unpaired_user
-
-        response = views.pair(request)
+        self.client.force_login(self.unpaired_user)
+        response = self.client.post("/pair/", data=data)
 
         self.assertContains(response, "Error pairing the account: HTTP Generic Exception")
 
@@ -131,9 +114,7 @@ class PairingTests(FactoryTestMixin, LatchTest):
     def test_error_message_hidden_when_debug_is_false(self, mock_pair):
         mock_pair.side_effect = HTTPException("HTTP Generic Exception")
         data = {"latch_pin": "correc"}
-        request = self.factory.post("/pair", data=data)
-        request.user = self.unpaired_user
-
-        response = views.pair(request)
+        self.client.force_login(self.unpaired_user)
+        response = self.client.post("/pair/", data=data)
 
         self.assertContains(response, "Error pairing the account")

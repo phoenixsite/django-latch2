@@ -25,10 +25,3 @@ class LatchTest(TestCase):
         cls.unpaired_user = User.objects.create_user(
             username="unpaired", email="unpaired@mail.com", password="password"
         )
-
-
-class FactoryTestMixin:
-    @classmethod
-    def setUpTestData(cls):
-        cls.factory = RequestFactory()
-        super().setUpTestData()

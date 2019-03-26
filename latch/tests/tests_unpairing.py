@@ -1,22 +1,15 @@
 import json
 
 from http.client import HTTPException
-
 from unittest.mock import patch
 
-from django.contrib.auth.models import AnonymousUser
 from django.test import override_settings
 
-from latch import views
+from . import LatchTest
 
-from . import FactoryTestMixin, LatchTest
-
-class UnpairingTests(FactoryTestMixin, LatchTest):
+class UnpairingTests(LatchTest):
     def test_pair_form_not_accesible_for_anonymous_user(self):
-        request = self.factory.get("/pair")
-        request.user = AnonymousUser()
-
-        response = views.pair(request)
+        response = self.client.get("/pair/")
 
         self.assertEqual(response.status_code, 302)
 
@@ -26,20 +19,16 @@ class UnpairingTests(FactoryTestMixin, LatchTest):
             json.dumps({})
         }
         data = {"latch_confirm": True}
-        request = self.factory.post("/unpair", data=data)
-        request.user = self.paired_user
-
-        response = views.unpair(request)
+        self.client.force_login(self.paired_user)
+        response = self.client.post("/unpair/", data)
 
         self.assertContains(response, "Latch removed from your account")
 
     @patch("latch.latch_sdk_python.latchapp.LatchApp.unpair")
     def test_show_warning_if_account_is_not_latched(self, mock_unpair):
         data = {"latch_confirm": True}
-        request = self.factory.post("/unpair", data=data)
-        request.user = self.unpaired_user
-
-        response = views.unpair(request)
+        self.client.force_login(self.unpaired_user)
+        response = self.client.post("/unpair/", data)
 
         self.assertContains(response, "Your account is not latched")
         self.assertEqual(mock_unpair.called, False)
@@ -49,10 +38,8 @@ class UnpairingTests(FactoryTestMixin, LatchTest):
         mock_unpair.side_effect = HTTPException("HTTP Generic Exception")
 
         data = {"latch_confirm": True}
-        request = self.factory.post("/unpair", data=data)
-        request.user = self.paired_user
-
-        response = views.unpair(request)
+        self.client.force_login(self.paired_user)
+        response = self.client.post("/unpair/", data)
 
         self.assertContains(response, "Error unpairing the account")
 
@@ -62,10 +49,8 @@ class UnpairingTests(FactoryTestMixin, LatchTest):
         mock_unpair.side_effect = HTTPException("HTTP Generic Exception")
 
         data = {"latch_confirm": True}
-        request = self.factory.post("/unpair", data=data)
-        request.user = self.paired_user
-
-        response = views.unpair(request)
+        self.client.force_login(self.paired_user)
+        response = self.client.post("/unpair/", data)
 
         self.assertContains(response, "Error unpairing the account: HTTP Generic Exception")
 
@@ -75,9 +60,7 @@ class UnpairingTests(FactoryTestMixin, LatchTest):
         mock_unpair.side_effect = HTTPException("HTTP Generic Exception")
 
         data = {"latch_confirm": True}
-        request = self.factory.post("/unpair", data=data)
-        request.user = self.paired_user
-
-        response = views.unpair(request)
+        self.client.force_login(self.paired_user)
+        response = self.client.post("/unpair/", data)
 
         self.assertContains(response, "Error unpairing the account")
