@@ -4,8 +4,9 @@ from functools import wraps
 
 from http.client import HTTPException
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
@@ -17,20 +18,18 @@ logger = logging.getLogger(__name__)
 
 def latch_is_configured(view):
     """
-    Decorator for views that check that Latch is configured in the site,
-    showing an error message if not.
+    Decorator for views that check that Latch is configured in the site.
+    If Latch is not configured, redirects to status page and shows
+    a message.
     """
 
     @wraps(view)
     def wrapper(request, *args, **kwargs):
         if not LatchSetup.objects.exists():
-            return render(
-                request,
-                "latch_message.html",
-                {"message": "Latch is not configured", "alert_type": "danger"},
-            )
-        else:
-            return view(request, *args, **kwargs)
+            messages.error(request, _("Latch is not configured"))
+            return redirect(status)
+
+        return view(request, *args, **kwargs)
 
     return wrapper
 
@@ -42,51 +41,40 @@ def pair(request, template_name="latch_pair.html"):
     Pairs the current user with a given latch token ID.
     """
     if UserProfile.accountid(request.user) is not None:
-        return render(
-            request,
-            "latch_message.html",
-            {"message": _("Account is already paired"), "alert_type": "danger"},
-        )
+        messages.error(request, _("Account is already paired"))
+        return redirect(status)
 
     if request.method == "POST":
         return process_pair_post(request)
-    else:
-        form = LatchPairForm()
-        return render(request, template_name, {"form": form})
+
+    form = LatchPairForm()
+    return render(request, template_name, {"form": form})
 
 
 def process_pair_post(request, template_name="latch_message.html"):
     form = LatchPairForm(request.POST)
     if form.is_valid():
         form.clean()
-        latch_instance = LatchSetup.instance()
         try:
+            latch_instance = LatchSetup.instance()
             account_id = latch_instance.pair(form.cleaned_data["latch_pin"])
             if "accountId" in account_id.get_data():
                 UserProfile.save_user_accountid(
                     request.user, account_id.get_data()["accountId"]
                 )
-                context = {
-                    "message": _("Account paired with Latch"),
-                    "alert_type": "success",
-                }
+                messages.success(request, _("Account paired with Latch"))
             else:
-                context = {
-                    "message": _("Account not paired with Latch"),
-                    "alert_type": "danger",
-                }
+                messages.error(request, _("Account not paired with Latch"))
+
         except HTTPException as err:
             logger.exception("Couldn't connect with Latch service")
 
             msg = _("Error pairing the account: %(error)s") % {"error": err} if settings.DEBUG \
                 else _("Error pairing the account")
 
-            context = {
-                "message": msg,
-                "alert_type": "danger",
-            }
+            messages.error(request, msg)
 
-        return render(request, template_name, context=context)
+        return redirect(status)
 
 @latch_is_configured
 @login_required
@@ -110,29 +98,20 @@ def do_unpair(request, template_name="latch_message.html"):
             latch = LatchSetup.instance()
             latch.unpair(UserProfile.accountid(request.user))
             UserProfile.delete_user_account_id(acc_id)
-            context = {
-                "message": _("Latch removed from your account"),
-                "alert_type": "success",
-            }
+            messages.success(request, _("Latch removed from your account"))
         else:
-            context = {
-                "message": _("Your account is not latched"),
-                "alert_type": "success",
-            }
+            messages.warning(request, _("Your account is not latched"))
     except UserProfile.DoesNotExist:
-        context = {"message": _("Your account has no profile"), "alert_type": "danger"}
+        messages.error(request, _("Your account has no profile"))
     except HTTPException as err:
         logger.exception("Couldn't connect with Latch service")
 
         msg = _("Error unpairing the account: %(error)s") % {"error": err} if settings.DEBUG \
                 else _("Error unpairing the account")
 
-        context = {
-            "message": msg,
-            "alert_type": "danger",
-        }
+        messages.error(request, msg)
 
-    return render(request, template_name, context=context)
+    return redirect(status)
 
 
 @login_required

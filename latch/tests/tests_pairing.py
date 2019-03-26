@@ -34,15 +34,31 @@ class PairingTests(LatchTest):
 
         self.assertEqual(response.status_code, 200)
 
+    @patch("latch.latch_sdk_python.latchapp.LatchApp.status")
     @patch("latch.latch_sdk_python.latchapp.LatchApp.pair")
-    def test_pairing_with_correct_code(self, mock_pair):
+    def test_pairing_with_correct_code(self, mock_pair, mock_status):
         mock_pair.return_value = sdk.latchresponse.LatchResponse(
             json.dumps({"data": {"accountId": "123456"}})
         )
 
+        mock_status.return_value = sdk.latchresponse.LatchResponse(
+            json.dumps(
+                {
+                    "data": {
+                        "operations": {
+                            "applicationId": {
+                                "status": "off",
+                                "operations": {"status": "off"},
+                            }
+                        }
+                    }
+                }
+            )
+        )
+
         data = {"latch_pin": "correc"}
         self.client.force_login(self.unpaired_user)
-        response = self.client.post("/pair/", data=data)
+        response = self.client.post("/pair/", data=data, follow=True)
 
         self.assertContains(response, "Account paired with Latch")
         user_profile = None
@@ -69,7 +85,7 @@ class PairingTests(LatchTest):
 
         data = {"latch_pin": "incorr"}
         self.client.force_login(self.paired_user)
-        response = self.client.post("/pair/", data=data)
+        response = self.client.post("/pair/", data=data, follow=True)
 
         self.assertContains(response, "Account is already paired")
 
@@ -86,7 +102,7 @@ class PairingTests(LatchTest):
 
         data = {"latch_pin": "incorr"}
         self.client.force_login(self.unpaired_user)
-        response = self.client.post("/pair/", data=data)
+        response = self.client.post("/pair/", data=data, follow=True)
 
         self.assertContains(response, "Account not paired with Latch")
 
@@ -95,26 +111,32 @@ class PairingTests(LatchTest):
         mock_pair.side_effect = HTTPException("HTTP Generic Exception")
         data = {"latch_pin": "correc"}
         self.client.force_login(self.unpaired_user)
-        response = self.client.post("/pair/", data=data)
+        response = self.client.post("/pair/", data=data, follow=True)
 
         self.assertContains(response, "Error pairing the account")
 
     @override_settings(DEBUG=True)
+    @patch("latch.latch_sdk_python.latchapp.LatchApp.status")
     @patch("latch.latch_sdk_python.latchapp.LatchApp.pair")
-    def test_error_message_shown_when_debug_is_true(self, mock_pair):
+    def test_error_message_shown_when_debug_is_true(self, mock_pair, mock_status):
         mock_pair.side_effect = HTTPException("HTTP Generic Exception")
+        mock_status.side_effect = HTTPException("HTTP Generic Exception")
+
         data = {"latch_pin": "correc"}
         self.client.force_login(self.unpaired_user)
-        response = self.client.post("/pair/", data=data)
+        response = self.client.post("/pair/", data=data, follow=True)
 
         self.assertContains(response, "Error pairing the account: HTTP Generic Exception")
 
     @override_settings(DEBUG=False)
+    @patch("latch.latch_sdk_python.latchapp.LatchApp.status")
     @patch("latch.latch_sdk_python.latchapp.LatchApp.pair")
-    def test_error_message_hidden_when_debug_is_false(self, mock_pair):
+    def test_error_message_hidden_when_debug_is_false(self, mock_pair, mock_status):
         mock_pair.side_effect = HTTPException("HTTP Generic Exception")
+        mock_status.side_effect = HTTPException("HTTP Generic Exception")
+
         data = {"latch_pin": "correc"}
         self.client.force_login(self.unpaired_user)
-        response = self.client.post("/pair/", data=data)
+        response = self.client.post("/pair/", data=data, follow=True)
 
         self.assertContains(response, "Error pairing the account")

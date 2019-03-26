@@ -20,7 +20,7 @@ class UnpairingTests(LatchTest):
         }
         data = {"latch_confirm": True}
         self.client.force_login(self.paired_user)
-        response = self.client.post("/unpair/", data)
+        response = self.client.post("/unpair/", data, follow=True)
 
         self.assertContains(response, "Latch removed from your account")
 
@@ -28,39 +28,33 @@ class UnpairingTests(LatchTest):
     def test_show_warning_if_account_is_not_latched(self, mock_unpair):
         data = {"latch_confirm": True}
         self.client.force_login(self.unpaired_user)
-        response = self.client.post("/unpair/", data)
+        response = self.client.post("/unpair/", data, follow=True)
 
         self.assertContains(response, "Your account is not latched")
         self.assertEqual(mock_unpair.called, False)
 
-    @patch("latch.latch_sdk_python.latchapp.LatchApp.unpair")
-    def test_shows_error_message_when_cannot_connect_to_latch(self, mock_unpair):
-        mock_unpair.side_effect = HTTPException("HTTP Generic Exception")
-
-        data = {"latch_confirm": True}
-        self.client.force_login(self.paired_user)
-        response = self.client.post("/unpair/", data)
-
-        self.assertContains(response, "Error unpairing the account")
-
     @override_settings(DEBUG=True)
+    @patch("latch.latch_sdk_python.latchapp.LatchApp.status")
     @patch("latch.latch_sdk_python.latchapp.LatchApp.unpair")
-    def test_error_message_shown_when_debug_is_true(self, mock_unpair):
+    def test_error_message_shown_when_debug_is_true(self, mock_unpair, mock_status):
         mock_unpair.side_effect = HTTPException("HTTP Generic Exception")
+        mock_status.side_effect = HTTPException("HTTP Generic Exception")
 
         data = {"latch_confirm": True}
         self.client.force_login(self.paired_user)
-        response = self.client.post("/unpair/", data)
+        response = self.client.post("/unpair/", data, follow=True)
 
         self.assertContains(response, "Error unpairing the account: HTTP Generic Exception")
 
     @override_settings(DEBUG=False)
+    @patch("latch.latch_sdk_python.latchapp.LatchApp.status")
     @patch("latch.latch_sdk_python.latchapp.LatchApp.unpair")
-    def test_error_message_hidden_when_debug_is_false(self, mock_unpair):
+    def test_error_message_hidden_when_debug_is_false(self, mock_unpair, mock_status):
         mock_unpair.side_effect = HTTPException("HTTP Generic Exception")
+        mock_status.side_effect = HTTPException("HTTP Generic Exception")
 
         data = {"latch_confirm": True}
         self.client.force_login(self.paired_user)
-        response = self.client.post("/unpair/", data)
+        response = self.client.post("/unpair/", data, follow=True)
 
         self.assertContains(response, "Error unpairing the account")

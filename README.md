@@ -25,12 +25,7 @@ In your `settings.py` file you need to add the following directives:
 ```python
 
    INSTALLED_APPS = (
-        'django.contrib.admin',
-        'django.contrib.auth',
-        'django.contrib.contenttypes',
-        'django.contrib.sessions',
-        'django.contrib.messages',
-        'django.contrib.staticfiles',
+       [...]
         'latch',
     )
 
@@ -40,7 +35,7 @@ In your `settings.py` file you need to add the following directives:
     # Append Latch Auth Backend the first in list
     AUTHENTICATION_BACKENDS = [
         'latch.auth_backend.LatchAuthBackend',
-        'django.contrib.auth.backends.ModelBackend'
+        [...]
     ]
 
     LATCH_BYPASS_WHEN_UNREACHABLE = True # True is the default behaviour. Configure as you need.
@@ -52,6 +47,8 @@ Latch doesn't care about the authentication mechanism, just stops authentication
 
 - If left unconfigured or set to `True` login attempts of paired accounts will be granted permission when connections with Latch service fails.
 - If set to `False` login attempts of paired accounts will be denied when connections with Latch service fails.
+
+Django-Latch relies on the [message framework](https://docs.djangoproject.com/en/2.1/ref/contrib/messages/) so you must setup your project accordingly.
 
 We create some models in database, so you must apply migrations after installing the app.
 
