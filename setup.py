@@ -1,13 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 import setuptools
+
+BASE_DIR = os.path.abspath(__file__)
+with open(os.path.join(BASE_DIR, "README.md"), "r") as f:
+    long_description = f.read()
 
 setuptools.setup(
     name='django-latch',
     version='0.2',
     description='Django latch module.',
-    long_description='Django module for integrating latch with django',
-    author='Javier Moral',
+    long_description=long_description,
+    author='Javier Moral (forked RootedCON, see README)',
     author_email='moraljlara@gmail.com',
     license='Apache License 2.0',
     url='https://github.com/moraljlara/django-latch',

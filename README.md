@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.com/javimoral/django-latch.svg?branch=master)](https://travis-ci.com/javimoral/django-latch)
 [![codecov](https://codecov.io/gh/javimoral/django-latch/branch/master/graph/badge.svg)](https://codecov.io/gh/javimoral/django-latch)
 
-Django and Latch integration
+Django and Latch integration. Originaly developed by Javier Olascoaga and [RootedCON](http://rootedcon.com/).
 
 # Requirements
 
@@ -88,6 +88,6 @@ You can use this module under Apache 2.0 license. See LICENSE file for details.
 latch-sdk-python is published under GNU General Public License 2.0. Rights belongs to ElevenPaths, more information and updated versionas at:
 https://github.com/ElevenPaths/latch-sdk-python
 
-# Author
+# Authors
 
-Originaly developed by Javier Olascoaga and RootedCON
+Originaly developed by Javier Olascoaga and [RootedCON](http://rootedcon.com/).
