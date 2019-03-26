@@ -88,7 +88,7 @@ def process_pair_post(request, template_name="latch_message.html"):
 
         return render(request, template_name, context=context)
 
-
+@latch_is_configured
 @login_required
 def unpair(request, template_name="latch_unpair.html"):
     """
