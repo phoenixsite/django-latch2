@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import os
+from os import path
 import setuptools
 
-BASE_DIR = os.path.abspath(__file__)
-with open(os.path.join(BASE_DIR, "README.md"), "r") as f:
+BASE_DIR = path.abspath(path.dirname(__file__))
+with open(path.join(BASE_DIR, "README.md"), "r") as f:
     long_description = f.read()
 
 setuptools.setup(
