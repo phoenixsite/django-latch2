@@ -24,7 +24,6 @@ setuptools.setup(
     data_files=[
         ('locales', ['latch/locale/es/LC_MESSAGES/django.mo', 'latch/locale/es/LC_MESSAGES/django.po']),
         ('templates', [
-            'latch/templates/latch_message.html',
             'latch/templates/latch_pair.html',
             'latch/templates/latch_status.html',
             'latch/templates/latch_unpair.html',
