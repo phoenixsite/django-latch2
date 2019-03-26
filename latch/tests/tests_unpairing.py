@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 from django.test import override_settings
 
+from latch.models import LatchSetup
 from . import LatchTest
 
 class UnpairingTests(LatchTest):
@@ -18,6 +19,22 @@ class UnpairingTests(LatchTest):
         mock_unpair.return_value = {
             json.dumps({})
         }
+        data = {"latch_confirm": True}
+        self.client.force_login(self.paired_user)
+        response = self.client.post("/unpair/", data, follow=True)
+
+        self.assertContains(response, "Latch removed from your account")
+
+    @patch("latch.latch_sdk_python.latchapp.LatchApp.unpair")
+    def test_unpairing_works_when_latch_settings_has_changed(self, mock_unpair):
+        mock_unpair.return_value = {
+            json.dumps({})
+        }
+
+        LatchSetup.objects.all().delete()
+        setup = LatchSetup.objects.create(latch_appid="abc", latch_secret="abc")
+        setup.save()
+
         data = {"latch_confirm": True}
         self.client.force_login(self.paired_user)
         response = self.client.post("/unpair/", data, follow=True)

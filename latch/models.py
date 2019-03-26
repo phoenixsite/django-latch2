@@ -23,7 +23,7 @@ class LatchSetup(models.Model):
         if not LatchSetup.objects.exists():
             return None
 
-        setup = LatchSetup.objects.get(pk=1)
+        setup = LatchSetup.objects.first()
         return Latch(setup.latch_appid, setup.latch_secret)
 
     @classmethod
@@ -33,7 +33,7 @@ class LatchSetup(models.Model):
         """
         if not LatchSetup.objects.exists():
             return None
-        setup = LatchSetup.objects.get(id=1)
+        setup = LatchSetup.objects.first()
         return setup.latch_appid
 
 
