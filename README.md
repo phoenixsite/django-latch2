@@ -69,7 +69,6 @@ We log failed API connections using `logger.exception`.
 # TODO
 
 - Add a signal when deleting a user to remove the profile
-- Add the UserProfile management to the admin
 - Add 2FA support
 
 # Bugs and requests

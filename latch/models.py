@@ -43,6 +43,13 @@ class UserProfile(models.Model):
         max_length=128, default="", null=True, blank=True
     )
 
+    def __str__(self):
+        return "Latch UserProfile {}".format(self.user)
+
+    class Meta:
+        verbose_name = "UserProfile"
+        verbose_name_plural = "UserProfiles"
+
     @classmethod
     def accountid(cls, user):
         try:
