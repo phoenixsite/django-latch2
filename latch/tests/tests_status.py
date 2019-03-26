@@ -11,9 +11,9 @@ from . import LatchTest
 
 
 class StatusTest(LatchTest):
-    @patch("latch.latch_sdk_python.latchapp.LatchApp.status")
-    def test_show_yes_if_latch_is_configured(self, mock_status):
-        mock_status.return_value = sdk.latchresponse.LatchResponse(
+    @classmethod
+    def setUpTestData(cls):
+        cls.latch_response_on = sdk.latchresponse.LatchResponse(
             json.dumps(
                 {
                     "data": {
@@ -27,6 +27,10 @@ class StatusTest(LatchTest):
                 }
             )
         )
+        super().setUpTestData()
+    @patch("latch.latch_sdk_python.latchapp.LatchApp.status")
+    def test_show_yes_if_latch_is_configured(self, mock_status):
+        mock_status.return_value = self.latch_response_on
         self.client.force_login(self.paired_user)
         response = self.client.get("/status/")
 
@@ -42,20 +46,7 @@ class StatusTest(LatchTest):
 
     @patch("latch.latch_sdk_python.latchapp.LatchApp.status")
     def test_tells_if_account_is_paired(self, mock_status):
-        mock_status.return_value = sdk.latchresponse.LatchResponse(
-            json.dumps(
-                {
-                    "data": {
-                        "operations": {
-                            "applicationId": {
-                                "status": "on",
-                                "operations": {"status": "on"},
-                            }
-                        }
-                    }
-                }
-            )
-        )
+        mock_status.return_value = self.latch_response_on
         self.client.force_login(self.paired_user)
         response = self.client.get("/status/")
 
@@ -75,20 +66,7 @@ class StatusTest(LatchTest):
 
     @patch("latch.latch_sdk_python.latchapp.LatchApp.status")
     def test_shows_correct_status_when_latch_is_activated(self, mock_status):
-        mock_status.return_value = sdk.latchresponse.LatchResponse(
-            json.dumps(
-                {
-                    "data": {
-                        "operations": {
-                            "applicationId": {
-                                "status": "on",
-                                "operations": {"status": "on"},
-                            }
-                        }
-                    }
-                }
-            )
-        )
+        mock_status.return_value = self.latch_response_on
 
         self.client.force_login(self.paired_user)
         response = self.client.get("/status/")

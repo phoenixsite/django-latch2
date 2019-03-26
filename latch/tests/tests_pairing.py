@@ -15,6 +15,24 @@ from . import LatchTest
 
 
 class PairingTests(LatchTest):
+    @classmethod
+    def setUpTestData(cls):
+        cls.latch_off_response = sdk.latchresponse.LatchResponse(
+            json.dumps(
+                {
+                    "data": {
+                        "operations": {
+                            "applicationId": {
+                                "status": "off",
+                                "operations": {"status": "off"},
+                            }
+                        }
+                    }
+                }
+            )
+        )
+        super().setUpTestData()
+
     def setUp(self):
         # Override the unpaired user to be written on an per-test basis.
         # If not, once we run the test_pairing_with_correct_code
@@ -41,20 +59,7 @@ class PairingTests(LatchTest):
             json.dumps({"data": {"accountId": "123456"}})
         )
 
-        mock_status.return_value = sdk.latchresponse.LatchResponse(
-            json.dumps(
-                {
-                    "data": {
-                        "operations": {
-                            "applicationId": {
-                                "status": "off",
-                                "operations": {"status": "off"},
-                            }
-                        }
-                    }
-                }
-            )
-        )
+        mock_status.return_value = self.latch_off_response
 
         data = {"latch_pin": "correc"}
         self.client.force_login(self.unpaired_user)
@@ -69,8 +74,9 @@ class PairingTests(LatchTest):
 
         self.assertEqual(user_profile.latch_accountId, "123456")
 
+    @patch("latch.latch_sdk_python.latchapp.LatchApp.status")
     @patch("latch.latch_sdk_python.latchapp.LatchApp.pair")
-    def test_pairing_already_paired_user_shows_error(self, mock_pair):
+    def test_pairing_already_paired_user_shows_error(self, mock_pair, mock_status):
         mock_pair.return_value = sdk.latchresponse.LatchResponse(
             json.dumps(
                 {
@@ -82,6 +88,8 @@ class PairingTests(LatchTest):
                 }
             )
         )
+
+        mock_status.return_value = self.latch_off_response
 
         data = {"latch_pin": "incorr"}
         self.client.force_login(self.paired_user)
