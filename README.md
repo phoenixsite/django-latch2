@@ -23,7 +23,6 @@ To install it, simply:
 In your `settings.py` file you need to add the following directives:
 
 ```python
-
    INSTALLED_APPS = (
        [...]
         'latch',
@@ -41,34 +40,26 @@ In your `settings.py` file you need to add the following directives:
     LATCH_BYPASS_WHEN_UNREACHABLE = True # True is the default behaviour. Configure as you need.
 ```
 
-Latch doesn't care about the authentication mechanism, just stops authentication process when the account is locked. That's why you must rely on another authentication backends, putting LatchAuthBackend first in the list.
+Configure app urls
 
-`LATCH_BYPASS_WHEN_UNREACHABLE` controls the behaviour when Latch service is unreachable.
+```python
+    from django.urls import path, include
 
-- If left unconfigured or set to `True` login attempts of paired accounts will be granted permission when connections with Latch service fails.
-- If set to `False` login attempts of paired accounts will be denied when connections with Latch service fails.
+    urlpatterns = [
+        [...]
+        path('latch/', include('latch.urls'))
+        [...]
+    ]
+```
 
-Django-Latch relies on the [message framework](https://docs.djangoproject.com/en/2.1/ref/contrib/messages/) so you must setup your project accordingly.
-
-We create some models in database, so you must apply migrations after installing the app.
+Then apply migrations
 
     $ python manage.py makemigrations
 
-Like `django.contrib.auth` we extend Django Admin templates, if you want to your design, override the following templates:
 
-    latch
-    └── templates
-        ├── latch_message.html
-        ├── latch_pair.html
-        ├── latch_status.html
-        └── latch_unpair.html
+TO-DO:
+* Configuring Latch API via environment variables.
 
-### Loggers
-We log failed API connections using `logger.exception`.
-
-# TODO
-
-- Add 2FA support
 
 # Bugs and requests
 
