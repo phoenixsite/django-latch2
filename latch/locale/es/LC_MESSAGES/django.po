@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-24 11:02+0100\n"
+"POT-Creation-Date: 2019-03-27 15:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Javier Moral <moraljlara@gmail.com>\n"
 "Language: \n"
@@ -12,24 +12,34 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: latch/templates/latch_message.html:3 latch/templates/latch_pair.html:3
-#: latch/templates/latch_status.html:3
+#: latch/forms.py:9
+msgid "Latch Pin"
+msgstr "Código Latch"
+
+#: latch/forms.py:20
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: latch/templates/latch_pair.html:3 latch/templates/latch_status.html:3
 msgid "Documentation"
 msgstr "Documentación"
 
-#: latch/templates/latch_message.html:3 latch/templates/latch_pair.html:3
-#: latch/templates/latch_status.html:3
+#: latch/templates/latch_pair.html:3 latch/templates/latch_status.html:3
 msgid "Log out"
 msgstr "Logout"
 
-#: latch/templates/latch_message.html:6 latch/templates/latch_pair.html:6
-#: latch/templates/latch_status.html:6 latch/templates/latch_unpair.html:3
+#: latch/templates/latch_pair.html:6 latch/templates/latch_status.html:6
+#: latch/templates/latch_unpair.html:3
 msgid "Home"
 msgstr "Inicio"
 
 #: latch/templates/latch_pair.html:7
 msgid "Pair Latch"
 msgstr "Parear Latch"
+
+#: latch/templates/latch_pair.html:17
+msgid "Pair"
+msgstr "Parear"
 
 #: latch/templates/latch_status.html:7
 msgid "Latch Status"
@@ -73,7 +83,15 @@ msgstr ""
 msgid "Latch connection error"
 msgstr "Error de conexión con Latch"
 
-#: latch/views.py:46
+#: latch/templates/latch_unpair.html:8
+msgid "Unpair"
+msgstr "Desparear"
+
+#: latch/views.py:30
+msgid "Latch is not configured"
+msgstr "Latch no está configurado"
+
+#: latch/views.py:45
 msgid "Account is already paired"
 msgstr "Su cuenta ya está pareada"
 
@@ -81,28 +99,36 @@ msgstr "Su cuenta ya está pareada"
 msgid "Account paired with Latch"
 msgstr "Su cuenta ha sido pareada con Latch"
 
-#: latch/views.py:71
+#: latch/views.py:68
 msgid "Account not paired with Latch"
 msgstr "Su cuenta no ha sido pareada con Latch"
 
-#: latch/views.py:76
+#: latch/views.py:73
 #, python-format
 msgid "Error pairing the account: %(error)s"
 msgstr "Error pareando la cuenta: %(error)s"
+
+#: latch/views.py:74
+msgid "Error pairing the account"
+msgstr "Error pareando la cuenta"
 
 #: latch/views.py:104
 msgid "Latch removed from your account"
 msgstr "Latch eliminado de su cuenta"
 
-#: latch/views.py:109
+#: latch/views.py:106
 msgid "Your account is not latched"
 msgstr "Su cuenta no está protegida con Latch"
 
-#: latch/views.py:113
+#: latch/views.py:108
 msgid "Your account has no profile"
 msgstr "Su cuenta no tiene perfil"
 
-#: latch/views.py:116
+#: latch/views.py:112
 #, python-format
 msgid "Error unpairing the account: %(error)s"
 msgstr "Error despareando la cuenta: %(error)s"
+
+#: latch/views.py:113
+msgid "Error unpairing the account"
+msgstr "Error despareando la cuenta"

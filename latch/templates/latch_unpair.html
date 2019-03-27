@@ -5,6 +5,6 @@
 <form action="{% url "latch_unpair" %}" method="post" >
 {% csrf_token %}
 {{ form.as_p }}
-<input type="submit" value="Unpair">
+<input type="submit" value="{% trans "Unpair" %}">
 </form>
 {% endblock %}

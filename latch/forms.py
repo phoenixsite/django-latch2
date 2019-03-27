@@ -1,11 +1,12 @@
 from django.forms import ModelForm
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from latch.models import LatchSetup
 
 
 class LatchPairForm(forms.Form):
-    latch_pin = forms.CharField()
+    latch_pin = forms.CharField(label=_("Latch Pin"))
 
 
 class LatchSetupForm(ModelForm):
@@ -16,4 +17,4 @@ class LatchSetupForm(ModelForm):
 
 
 class LatchUnpairForm(forms.Form):
-    latch_confirm = forms.BooleanField()
+    latch_confirm = forms.BooleanField(label=_("Confirm"))
