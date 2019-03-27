@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from django.test import override_settings
 
-from latch.models import LatchSetup
+from latch.models import LatchSetup, UserProfile
 from . import LatchTest
 
 class UnpairingTests(LatchTest):
@@ -24,6 +24,8 @@ class UnpairingTests(LatchTest):
         response = self.client.post("/unpair/", data, follow=True)
 
         self.assertContains(response, "Latch removed from your account")
+        mock_unpair.assert_called_once_with(self.paired_profile.latch_accountId)
+        self.assertEqual(UserProfile.objects.filter(user=self.paired_user).count(), 0)
 
     @patch("latch.latch_sdk_python.latchapp.LatchApp.unpair")
     def test_unpairing_works_when_latch_settings_has_changed(self, mock_unpair):
@@ -40,6 +42,8 @@ class UnpairingTests(LatchTest):
         response = self.client.post("/unpair/", data, follow=True)
 
         self.assertContains(response, "Latch removed from your account")
+        mock_unpair.assert_called_once_with(self.paired_profile.latch_accountId)
+        self.assertEqual(UserProfile.objects.filter(user=self.paired_user).count(), 0)
 
     @patch("latch.latch_sdk_python.latchapp.LatchApp.unpair")
     def test_show_warning_if_account_is_not_latched(self, mock_unpair):
@@ -75,3 +79,16 @@ class UnpairingTests(LatchTest):
         response = self.client.post("/unpair/", data, follow=True)
 
         self.assertContains(response, "Error unpairing the account")
+
+    @override_settings(DEBUG=True)
+    @patch("latch.latch_sdk_python.latchapp.LatchApp.status")
+    @patch("latch.latch_sdk_python.latchapp.LatchApp.unpair")
+    def test_profile_is_not_deleted_if_an_error_occurs(self, mock_unpair, mock_status):
+        mock_unpair.side_effect = HTTPException("HTTP Generic Exception")
+        mock_status.side_effect = HTTPException("HTTP Generic Exception")
+
+        data = {"latch_confirm": True}
+        self.client.force_login(self.paired_user)
+        self.client.post("/unpair/", data, follow=True)
+
+        self.assertEqual(UserProfile.objects.filter(user=self.paired_user).count(), 1)

@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.conf import settings
+from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
 from latch.models import LatchSetup, UserProfile
@@ -45,13 +46,13 @@ def pair(request, template_name="latch_pair.html"):
         return redirect(status)
 
     if request.method == "POST":
-        return process_pair_post(request)
+        return _process_pair_post(request)
 
     form = LatchPairForm()
     return render(request, template_name, {"form": form})
 
 
-def process_pair_post(request, template_name="latch_message.html"):
+def _process_pair_post(request, template_name="latch_message.html"):
     form = LatchPairForm(request.POST)
     if form.is_valid():
         form.clean()
@@ -85,19 +86,21 @@ def unpair(request, template_name="latch_unpair.html"):
     if request.method == "POST":
         form = LatchUnpairForm(request.POST)
         if form.is_valid():
-            return do_unpair(request)
+            return _process_unpair_post(request)
     else:
         form = LatchUnpairForm()
     return render(request, template_name, {"form": form})
 
 
-def do_unpair(request, template_name="latch_message.html"):
+def _process_unpair_post(request, template_name="latch_message.html"):
     try:
         acc_id = UserProfile.accountid(request.user)
         if acc_id:
-            latch = LatchSetup.instance()
-            latch.unpair(UserProfile.accountid(request.user))
-            UserProfile.delete_user_account_id(acc_id)
+            # Actual unpairing of the account is made in the signal
+            # Using an atomic transaction rolls back if Latch service
+            # is unreachable.
+            with transaction.atomic():
+                UserProfile.delete_user_account_id(acc_id)
             messages.success(request, _("Latch removed from your account"))
         else:
             messages.warning(request, _("Your account is not latched"))
