@@ -15,7 +15,8 @@
 .history
 
 # Sphinx docs:
-build
+docs/_html/
+docs/_static/
 
 # SQLite3 database files:
 *.db
