@@ -18,7 +18,7 @@ class StatusTest(LatchTest):
                 {
                     "data": {
                         "operations": {
-                            "applicationId": {
+                            "abcdefghijklmnopqrst": {
                                 "status": "on",
                                 "operations": {"status": "on"},
                             }
@@ -80,7 +80,7 @@ class StatusTest(LatchTest):
                 {
                     "data": {
                         "operations": {
-                            "applicationId": {
+                            "abcdefghijklmnopqrst": {
                                 "status": "off",
                                 "operations": {"status": "off"},
                             }

@@ -22,7 +22,7 @@ class PairingTests(LatchTest):
                 {
                     "data": {
                         "operations": {
-                            "applicationId": {
+                            "abcdefghijklmnopqrst": {
                                 "status": "off",
                                 "operations": {"status": "off"},
                             }
@@ -38,7 +38,9 @@ class PairingTests(LatchTest):
         # If not, once we run the test_pairing_with_correct_code
         # tests reliying of unpaired users will fail
         self.unpaired_user = User.objects.create_user(
-            username="unpaired_user", email="unpaired_user@mail.com", password="password"
+            username="unpaired_user",
+            email="unpaired_user@mail.com",
+            password="password",
         )
 
     def test_pair_form_not_accesible_for_anonymous_user(self):
@@ -76,7 +78,9 @@ class PairingTests(LatchTest):
 
     @patch("latch.latch_sdk_python.latchapp.LatchApp.status")
     @patch("latch.latch_sdk_python.latchapp.LatchApp.pair")
-    def test_pairing_works_when_latch_settings_has_changed(self, mock_pair, mock_status):
+    def test_pairing_works_when_latch_settings_has_changed(
+        self, mock_pair, mock_status
+    ):
         # When we change Latch settings, PK != 1
         # This raises errors in our helper methods.
 
@@ -87,7 +91,10 @@ class PairingTests(LatchTest):
         mock_status.return_value = self.latch_off_response
 
         LatchSetup.objects.all().delete()
-        setup = LatchSetup.objects.create(latch_appid="abc", latch_secret="abc")
+        setup = LatchSetup.objects.create(
+            latch_appid="abcdefghijklmnopqrst",
+            latch_secret="abcdefghijklmnopqrstuvwxyzabcdefghijklmno",
+        )
         setup.save()
 
         data = {"latch_pin": "correc"}
@@ -163,7 +170,9 @@ class PairingTests(LatchTest):
         self.client.force_login(self.unpaired_user)
         response = self.client.post("/pair/", data=data, follow=True)
 
-        self.assertContains(response, "Error pairing the account: HTTP Generic Exception")
+        self.assertContains(
+            response, "Error pairing the account: HTTP Generic Exception"
+        )
 
     @override_settings(DEBUG=False)
     @patch("latch.latch_sdk_python.latchapp.LatchApp.status")

@@ -130,7 +130,7 @@ def status(request, template_name="latch_status.html"):
                 latch_instance = LatchSetup.instance()
                 status_response = latch_instance.status(acc_id)
                 data = status_response.get_data()["operations"]
-                account_status = data["applicationId"]["status"]
+                account_status = data[LatchSetup.appid()]["status"]
 
     except HTTPException:
         logger.exception("Couldn't connect with Latch service")
