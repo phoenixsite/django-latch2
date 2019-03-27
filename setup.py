@@ -13,7 +13,7 @@ setuptools.setup(
     description='Django latch module.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    author='Javier Moral (forked RootedCON, see README)',
+    author='Javier Moral et al. (see README)',
     author_email='moraljlara@gmail.com',
     license='Apache License 2.0',
     url='https://github.com/javimoral/django-latch',
