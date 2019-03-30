@@ -17,7 +17,9 @@ setuptools.setup(
     author_email='moraljlara@gmail.com',
     license='Apache License 2.0',
     url='https://github.com/javimoral/django-latch',
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(
+        exclude=["*.tests", "*.tests.*", "tests.*", "tests"]
+    ),
     install_requires=[
         "Django>=2.0",
     ],
