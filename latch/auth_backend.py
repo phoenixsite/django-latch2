@@ -4,6 +4,7 @@ import logging
 from http.client import HTTPException
 
 from django.contrib.auth.backends import ModelBackend
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.conf import settings
@@ -28,10 +29,16 @@ class LatchAuthBackend(ModelBackend):
         UserModel = get_user_model()
         if username is None:
             username = kwargs.get(UserModel.USERNAME_FIELD)
-
-        user = UserModel._default_manager.get_by_natural_key(username)
-        if not self.latch_permits_login(user):
-            raise PermissionDenied
+        try:
+            user = UserModel._default_manager.get_by_natural_key(username)
+            if not self.latch_permits_login(user):
+                make_password(password)
+                raise PermissionDenied
+        except UserModel.DoesNotExist:
+            # Once again, we let the subsecuent backends
+            # implement it's mechanisms against timing attacks
+            # when user doesn't exists.
+            pass
 
         return None
 

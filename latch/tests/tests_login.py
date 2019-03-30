@@ -100,3 +100,9 @@ class LoginWithLatchUnreachable(LatchTest):
         self.assertEqual(
             self.client.login(username="paired", password="password"), True
         )
+
+class LoginWithUnexistingUser(LatchTest):
+    def test_login(self):
+        self.assertEqual(
+            self.client.login(username="wrong", password="whocares"), False
+        )

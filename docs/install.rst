@@ -73,9 +73,9 @@ Your application must rely on another authentication backends, putting :code:`La
 
 .. warning:: **Timing attacks**
 
-    Currently, when an user has Latch configured and blocking login attempts
-    the password hashing doesn't run, thus, making possible to extract pairing
-    status information about the users.
+    When a locked out paired account trys to connect we run the password hasher
+    once to avoid timing attack. If the account doesn't exists, we pass the responsability
+    to the next auth backend in chain.
 
 Bypass when service is unreachable
 ##################################

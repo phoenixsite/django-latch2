@@ -65,7 +65,6 @@ For more information, please refer to [documentation](https://django-latch.readt
 
 # TO-DO
 * Configuring Latch API via environment variables.
-* Run password hashing when Latch is locked to avoid timing attacks.
 
 
 # Bugs and requests

@@ -9,7 +9,7 @@ with open(path.join(BASE_DIR, "README.md"), "r") as f:
 
 setuptools.setup(
     name='django-latch',
-    version='0.2',
+    version='0.2.1',
     description='Django latch module.',
     long_description=long_description,
     long_description_content_type='text/markdown',
