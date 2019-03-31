@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.test import override_settings
 
-from latch.models import UserProfile, LatchSetup
+from latch.models import UserProfile
 from latch import latch_sdk_python as sdk
 
 from . import LatchTest
@@ -62,40 +62,6 @@ class PairingTests(LatchTest):
         )
 
         mock_status.return_value = self.latch_off_response
-
-        data = {"latch_pin": "correc"}
-        self.client.force_login(self.unpaired_user)
-        response = self.client.post("/pair/", data=data, follow=True)
-
-        self.assertContains(response, "Account paired with Latch")
-        user_profile = None
-        try:
-            user_profile = UserProfile.objects.get(user=self.unpaired_user)
-        except ObjectDoesNotExist:
-            self.fail("Profile object has not been created")
-
-        self.assertEqual(user_profile.latch_accountId, "123456")
-
-    @patch("latch.latch_sdk_python.latchapp.LatchApp.status")
-    @patch("latch.latch_sdk_python.latchapp.LatchApp.pair")
-    def test_pairing_works_when_latch_settings_has_changed(
-        self, mock_pair, mock_status
-    ):
-        # When we change Latch settings, PK != 1
-        # This raises errors in our helper methods.
-
-        mock_pair.return_value = sdk.latchresponse.LatchResponse(
-            json.dumps({"data": {"accountId": "123456"}})
-        )
-
-        mock_status.return_value = self.latch_off_response
-
-        LatchSetup.objects.all().delete()
-        setup = LatchSetup.objects.create(
-            latch_appid="abcdefghijklmnopqrst",
-            latch_secret="abcdefghijklmnopqrstuvwxyzabcdefghijklmno",
-        )
-        setup.save()
 
         data = {"latch_pin": "correc"}
         self.client.force_login(self.unpaired_user)

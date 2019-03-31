@@ -42,6 +42,8 @@ In your `settings.py` file you need to add the following directives:
         [...]
     ]
 
+    LATCH_APP_ID = <APP Id> # You can use os.environ if you prefer
+    LATCH_APP_SECRET = <APP Secret>
     LATCH_BYPASS_WHEN_UNREACHABLE = True # True is the default behaviour. Configure as you need.
 ```
 
@@ -62,10 +64,6 @@ Then apply migrations
     $ python manage.py makemigrations
 
 For more information, please refer to [documentation](https://django-latch.readthedocs.io).
-
-# TO-DO
-* Configuring Latch API via environment variables.
-
 
 # Bugs and requests
 

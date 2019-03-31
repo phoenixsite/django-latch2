@@ -1,10 +1,10 @@
 import json
 
 from http.client import HTTPException
-
 from unittest.mock import patch
 
-from latch.models import LatchSetup
+from django.test import override_settings
+
 from latch import latch_sdk_python as sdk
 
 from . import LatchTest
@@ -36,9 +36,9 @@ class StatusTest(LatchTest):
 
         self.assertContains(response, "Latch is configured: <b>Yes</b>")
 
+    @override_settings(LATCH_APP_ID=None)
+    @override_settings(LATCH_APP_SECRET=None)
     def test_show_no_if_latch_is_configured(self):
-        LatchSetup.objects.get(pk=1).delete()
-
         self.client.force_login(self.paired_user)
         response = self.client.get("/status/")
 

@@ -44,7 +44,7 @@ class LatchAuthBackend(ModelBackend):
 
     @staticmethod
     def latch_permits_login(user):
-        if not LatchSetup.objects.exists() or not UserProfile.accountid(user):
+        if not LatchSetup.is_configured() or not UserProfile.accountid(user):
             # Always return on if is not configured or the user does not have latch configured
             return True
 

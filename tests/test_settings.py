@@ -73,3 +73,6 @@ LOGGING = {
 }
 
 STATIC_URL = 'static/'
+
+LATCH_APP_ID = "abcdefghijklmnopqrst"
+LATCH_APP_SECRET = "abcdefghijklmnopqrstuvwxyzabcdefghijklmno"

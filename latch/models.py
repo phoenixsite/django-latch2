@@ -1,40 +1,47 @@
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
+from django.utils.translation import gettext_lazy as _
 
 from latch.latch_sdk_python import Latch
 
 
-class LatchSetup(models.Model):
-    latch_appid = models.CharField(max_length=256, null=False, unique=True)
-    latch_secret = models.CharField(max_length=128, null=False, unique=True)
-
-    def __str__(self):
-        return "Latch Setup"
-
-    class Meta:
-        verbose_name_plural = "Latch Setup"
-
+class LatchSetup:
     @classmethod
     def instance(cls):
         """
-        Returns an instance of Latch API :class:`latch.latch_sdk_python.Latch` object for the current
-        configuration
+        Returns an instance of Latch API :class:`latch.latch_sdk_python.Latch` object for
+        the current configuration
         """
-        if not LatchSetup.objects.exists():
-            return None
+        app_id = getattr(settings, "LATCH_APP_ID", None)
+        app_secret = getattr(settings, "LATCH_APP_SECRET", None)
 
-        setup = LatchSetup.objects.first()
-        return Latch(setup.latch_appid, setup.latch_secret)
+        if app_id is None or app_secret is None:
+            raise ImproperlyConfigured(_("Latch service is not properly configured"))
+
+        return Latch(app_id, app_secret)
 
     @classmethod
     def appid(cls):
         """
         Returns the configured application identifier
         """
-        if not LatchSetup.objects.exists():
-            return None
-        setup = LatchSetup.objects.first()
-        return setup.latch_appid
+        app_id = getattr(settings, "LATCH_APP_ID", None)
+
+        if app_id is None:
+            raise ImproperlyConfigured(_("Latch service is not properly configured"))
+
+        return app_id
+
+    @classmethod
+    def is_configured(cls):
+        """
+        Returns a boolean indicating if Latch API is configured
+        """
+        app_id = getattr(settings, "LATCH_APP_ID", None)
+        app_secret = getattr(settings, "LATCH_APP_SECRET", None)
+
+        return app_id is not None and app_secret is not None
 
 
 class UserProfile(models.Model):

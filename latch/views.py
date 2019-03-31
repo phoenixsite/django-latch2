@@ -6,6 +6,7 @@ from http.client import HTTPException
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ImproperlyConfigured
 from django.contrib import messages
 from django.conf import settings
 from django.db import transaction
@@ -26,7 +27,9 @@ def latch_is_configured(view):
 
     @wraps(view)
     def wrapper(request, *args, **kwargs):
-        if not LatchSetup.objects.exists():
+        try:
+            LatchSetup.instance()
+        except ImproperlyConfigured:
             messages.error(request, _("Latch is not configured"))
             return redirect(status)
 
@@ -65,17 +68,26 @@ def _process_pair_post(request, template_name="latch_message.html"):
                 )
                 messages.success(request, _("Account paired with Latch"))
             else:
+                logger.warning(
+                    "Pair process of user %s failed with error %s",
+                    request.user,
+                    account_id.get_error(),
+                )
                 messages.error(request, _("Account not paired with Latch"))
 
         except HTTPException as err:
             logger.exception("Couldn't connect with Latch service")
 
-            msg = _("Error pairing the account: %(error)s") % {"error": err} if settings.DEBUG \
+            msg = (
+                _("Error pairing the account: %(error)s") % {"error": err}
+                if settings.DEBUG
                 else _("Error pairing the account")
+            )
 
             messages.error(request, msg)
 
         return redirect(status)
+
 
 @latch_is_configured
 @login_required
@@ -109,8 +121,11 @@ def _process_unpair_post(request, template_name="latch_message.html"):
     except HTTPException as err:
         logger.exception("Couldn't connect with Latch service")
 
-        msg = _("Error unpairing the account: %(error)s") % {"error": err} if settings.DEBUG \
-                else _("Error unpairing the account")
+        msg = (
+            _("Error unpairing the account: %(error)s") % {"error": err}
+            if settings.DEBUG
+            else _("Error unpairing the account")
+        )
 
         messages.error(request, msg)
 
@@ -123,7 +138,12 @@ def status(request, template_name="latch_status.html"):
     Gives information about Latch status, if it's configured,
     and data relative to the user making the request.
     """
-    configured = LatchSetup.objects.exists()
+    configured = True
+    try:
+        LatchSetup.instance()
+    except ImproperlyConfigured:
+        configured = False
+
     acc_id = None
     account_status = None
     try:

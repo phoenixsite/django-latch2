@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-27 15:49+0100\n"
+"POT-Creation-Date: 2019-03-31 11:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Javier Moral <moraljlara@gmail.com>\n"
 "Language: \n"
@@ -19,6 +19,10 @@ msgstr "Código Latch"
 #: latch/forms.py:20
 msgid "Confirm"
 msgstr "Confirmar"
+
+#: latch/models.py:20 latch/models.py:32
+msgid "Latch service is not properly configured"
+msgstr "El servicio Latch no está correctamente configurado"
 
 #: latch/templates/latch_pair.html:3 latch/templates/latch_status.html:3
 msgid "Documentation"
