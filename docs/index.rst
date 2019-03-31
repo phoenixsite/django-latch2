@@ -1,4 +1,4 @@
-django-latch |release|
+django-latch
 ==================================
 
 django-latch provides integration with `Latch <https://latch.elevenpaths.com/>`_
