@@ -3,11 +3,6 @@
 Installation
 ============
 
-Currently, we support
-
-* >= Django 2.0
-* >= Python 3.5
-
 To install django-latch run::
 
     $ pip install django-latch
