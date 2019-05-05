@@ -33,9 +33,6 @@ In your `settings.py` file you need to add the following directives:
         'latch',
     )
 
-    # Add auth profile
-    AUTH_PROFILE_MODULE='latch.UserProfile'
-
     # Append Latch Auth Backend the first in list
     AUTHENTICATION_BACKENDS = [
         'latch.auth_backend.LatchAuthBackend',
