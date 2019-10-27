@@ -6,7 +6,7 @@ service by `ElevenPaths <https://www.elevenpaths.com/>`_, adding an aditional la
 
 Currently, we support
 
-* Python 3.4, 3.5, 3.6, 3.7
+* Python 3.4, 3.5, 3.6, 3.7, 3.8
 * Django 2.0, 2.1, 2.2, 3.0
 
 This package doesn't give an authentication method by itself, just modify the authentication

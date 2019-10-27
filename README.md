@@ -8,7 +8,7 @@ Django and Latch integration. Originaly developed by Javier Olascoaga and [Roote
 
 # Requirements
 
-- Python 3.4, 3.5, 3.6, 3.7
+- Python 3.4, 3.5, 3.6, 3.7, 3.8
 - Django 2.0, 2.1, 2.2, 3.0
 
 ## Installation
