@@ -1,6 +1,6 @@
 # django-latch
 
-[![Build Status](https://travis-ci.com/javimoral/django-latch.svg?branch=master)](https://travis-ci.com/javimoral/django-latch)
+![CI](https://github.com/javimoral/django-latch/workflows/CI/badge.svg?)
 [![codecov](https://codecov.io/gh/javimoral/django-latch/branch/master/graph/badge.svg)](https://codecov.io/gh/javimoral/django-latch)
 [![Documentation Status](https://readthedocs.org/projects/django-latch/badge/?version=latest)](https://django-latch.readthedocs.io/en/latest/?badge=latest)
 

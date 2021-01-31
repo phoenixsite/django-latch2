@@ -1,17 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from os import path
+
+import codecs
 import setuptools
 
-BASE_DIR = path.abspath(path.dirname(__file__))
-with open(path.join(BASE_DIR, "README.md"), "r") as f:
-    long_description = f.read()
+def long_description():
+    try:
+        return codecs.open('README.md', 'r', 'utf-8').read()
+    except OSError:
+        return 'Long description error: Missing README.md file'
+
 
 setuptools.setup(
     name='django-latch',
     version='0.3',
     description='Django latch module.',
-    long_description=long_description,
+    long_description=long_description(),
     long_description_content_type='text/markdown',
     author='Javier Moral et al. (see README)',
     author_email='moraljlara@gmail.com',
