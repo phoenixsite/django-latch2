@@ -1,0 +1,109 @@
+[project]
+name = "django-latch2"
+version = "5.2.0"
+authors = [
+  { name = "Carlos Romero Cruz", email = "phoenixsitegit@outlook.com"}
+]
+description = "Latch support for Django."
+license = {text = "BSD-3-Clause"}
+readme = "README.md"
+requires-python= ">=3.9"
+dependencies = [
+  "Django>=4.2,!=5.0.*",
+  "latch-sdk-telefonica @ git+https://github.com/Telefonica/latch-sdk-python.git@chore/modernize-repo",
+]
+keywords = ["django", "latch", "security", "auth", "authentication"]
+classifiers = [
+  "Environment :: Web Environment",
+  "Framework :: Django",
+  "Framework :: Django :: 4.2",
+  "Framework :: Django :: 5.1",
+  "Framework :: Django :: 5.2",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: BSD License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Development Status :: 5 - Production/Stable",
+  "Topic :: Utilities",
+]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project.urls]
+Documentation = "https://django-latch2.readthedocs.io"
+Source = "https://github.com/phoenixsite/django-latch2"
+Changelog = "https://django-latch2.readthedocs.io/en/stable/changelog.html"
+
+[dependency-groups]
+tests = ["nox"]
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+
+[tool.ruff.lint]
+select = ["C", "E", "F", "W", "B"]
+ignore = ["E203", "E501", "B008", "B904"]
+
+[tool.ruff.format]
+indent-style = "space"
+quote-style = "double"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.pylint]
+disable = [
+  "duplicate-code",
+  "logging-fstring-interpolation",
+  "missing-class-docstring",
+  "missing-module-docstring",
+  "too-many-ancestors",
+]
+
+[tool.coverage.paths]
+source = ["src"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "raise NotImplementedError",
+]
+fail_under = 95
+
+[tool.coverage.run]
+branch = true
+parallel = true
+source = ["django-latch2"]
+
+[tool.interrogate]
+exclude = [
+  "src/django_latch2/migrations",
+]
+fail-under = 100
+ignore-init-module = true
+ignore-init-method = true
+
+[tool.check-wheel-contents]
+ignore = ["W004"]
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.build]
+source-includes = [
+    ".editorconfig",
+    ".pre-commit-config.yaml",
+    "docs/",
+    "noxfile.py",
+    "pdm.lock",
+    "runtests.py",
+    "tests/",
+]

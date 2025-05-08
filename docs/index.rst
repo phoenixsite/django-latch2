@@ -1,27 +1,40 @@
-django-latch
-==================================
+.. _index:
 
-django-latch provides integration with `Latch <https://latch.elevenpaths.com/>`_
-service by `ElevenPaths <https://www.elevenpaths.com/>`_, adding an aditional layer of security to the authentication process.
-
-Currently, we support
-
-* Python 3.4, 3.5, 3.6, 3.7, 3.8
-* Django 2.0, 2.1, 2.2, 3.0
-
-This package doesn't give an authentication method by itself, just modify the authentication
-flow stoping it if the user has decided to lock in his account. You must rely on another
-authentication method like Django default :code:`ModelBackend`.
-
-Originaly developed by Javier Olascoaga and `RootedCON <http://rootedcon.com/>`_
+django-latch2 |release|
+===========================
 
 
-Documentation contents
-----------------------
+
+Contents
+--------
 
 .. toctree::
    :maxdepth: 1
+   :caption: Installation and configuration
 
    install
-   usage
+   quickstart
 
+.. toctree::
+    :caption: Authentication backends
+    :maxdepth: 1
+
+    authentication-backends
+
+.. toctree::
+    :caption: For developers
+    :maxdepth: 1
+
+    views
+    forms
+    custom-backends
+    exceptions
+    settings
+
+.. toctree::
+    :caption: Other
+    :maxdepth: 1
+
+    security
+    changelog
+    faq

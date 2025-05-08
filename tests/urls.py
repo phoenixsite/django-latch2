@@ -1,15 +1,49 @@
 """
-Here we define urls for our mock testing app.
-Like django.contrib.auth, we chose admin site templates
-for our app, so we to being able to run tests,
-we need to provide access to admin site without modifing
-the app urls.
+URLConf used for testing.
 """
-# pylint: disable=invalid-name
-from django.contrib import admin
-from django.urls import path, include
+
+# SPDX-License-Identifier: BSD-3-Clause
+
+from django.urls import path
+from django.contrib.auth.views import LoginView
+from django.views.generic import TemplateView
+
+from django_latch2.urls import urlpatterns as latch_urls
+from django_latch2.decorators import paired_user_required, unpaired_user_required
+
+from .views import (
+    RequirePairedUserWithClassDecoratorView,
+    RequireUnPairedUserWithMethodDecoratorView,
+)
 
 urlpatterns = [
-    path("", include("latch.urls")),
-    path("admin/", admin.site.urls),
+    path("accounts/login/", LoginView.as_view(), name="login"),
+    path(
+        "require-paired-view-instance",
+        paired_user_required(
+            TemplateView.as_view(template_name="django_latch2/require_paired_user.html")
+        ),
+        name="require_paired_view_instance",
+    ),
+    path(
+        "require-unpaired-view-instance",
+        unpaired_user_required(
+            TemplateView.as_view(
+                template_name="django_latch2/require_unpaired_user.html"
+            )
+        ),
+        name="require_unpaired_view_instance",
+    ),
+    path(
+        "require-paired-view-class",
+        RequirePairedUserWithClassDecoratorView.as_view(),
+        name="require_paired_view_class",
+    ),
+    path(
+        "require-unpaired-view-class",
+        RequireUnPairedUserWithMethodDecoratorView.as_view(),
+        name="require_unpaired_view_class",
+    ),
 ]
+
+urlpatterns += latch_urls

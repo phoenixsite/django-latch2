@@ -1,76 +1,52 @@
-import os
+"""
+Minimal Django settings for testing.
+"""
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# SPDX-License-Identifier: BSD-3-Clause
 
-SECRET_KEY = 'fake-key'
+import pathlib
 
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.auth',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'latch',
-]
+from django.utils.crypto import get_random_string
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+APP_DIR = pathlib.Path(__file__).parents[0]
 
-ROOT_URLCONF = 'tests.urls'
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:',
-    },
-}
-
-AUTHENTICATION_BACKENDS = [
-    'latch.auth_backend.LatchAuthBackend',
-    'django.contrib.auth.backends.ModelBackend'
-]
-
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+INSTALLED_APPS = (
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.sites",
+    "django_latch2",
+    "tests",
+)
+ROOT_URLCONF = "tests.urls"
+LOGIN_URL = "login"
+DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory"}}
+MIDDLEWARE = (
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+)
+SECRET_KEY = get_random_string(12)
+SITE_ID = 1
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [APP_DIR / "templates"],
+        "OPTIONS": {
+            "context_processors": [
+                "django.contrib.auth.context_processors.auth",
+                "django.template.context_processors.debug",
+                "django.template.context_processors.i18n",
+                "django.template.context_processors.media",
+                "django.template.context_processors.static",
+                "django.template.context_processors.tz",
+                "django.contrib.messages.context_processors.messages",
+            ]
         },
-    },
+    }
 ]
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-    'handlers': {
-        'null': {
-            'class': 'logging.NullHandler',
-        },
-    },
-    'loggers': {
-        'latch': {
-            'handlers': ['null'],
-            'propagate': False,
-        },
-    },
-}
-
-STATIC_URL = 'static/'
-
-LATCH_APP_ID = "abcdefghijklmnopqrst"
-LATCH_APP_SECRET = "abcdefghijklmnopqrstuvwxyzabcdefghijklmno"
+AUTHENTICATION_BACKENDS = ["django_latch2.backend.LatchDefaultModelBackend"]
+LATCH_APP_ID = "a" * 20
+LATCH_SECRET_KEY = "b" * 64

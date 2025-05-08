@@ -1,0 +1,114 @@
+"""
+Views for pairing and unpairing a user.
+"""
+
+# SPDX-License-Identifier: BSD-3-Clause
+
+from django.views.generic.edit import FormView
+from django.views.generic.base import TemplateView
+from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
+from django.conf import settings
+from django.utils.translation import gettext_lazy as _
+
+from latch_sdk.syncio import LatchSDK
+from latch_sdk.syncio.pure import Latch
+from latch_sdk.exceptions import LatchError
+
+from .forms import PairLatchForm
+from .models import LatchUserConfig, is_paired
+from .exceptions import PairingLatchError, UnpairingLatchError
+from .mixins import UnpairedUserRequiredMixin, PairedUserRequiredMixin
+
+
+class PairLatchView(UnpairedUserRequiredMixin, FormView):
+    """
+    Implement the pairing operation for an authenticated unpaired user.
+    """
+
+    ALREADY_PAIRED_MESSAGE = _("Your account is already paired.")
+
+    form_class = PairLatchForm
+    template_name = "django_latch2/pair_account_form.html"
+    success_url = reverse_lazy("django_latch2_pair_complete")
+
+    def form_valid(self, form):
+        """
+        If the form is valid, attempt to pair the user account to the Latch service
+        and redirect to the sucess URL. If a :class:`django_latch2:exceptions.PairingLatchError`
+        is raised, instead re-render the form and include information about the error in the
+        template context.
+        """
+
+        self.check_user()
+        form.pair_account(self.request.user)
+        return super().form_valid(form)
+
+    def check_user(self):
+        """
+        Check if the logged user has its account already paired,
+        raising ``PairingLatchError`` if so.
+        """
+
+        if is_paired(self.request.user):
+            raise PairingLatchError(self.ALREADY_PAIRED_MESSAGE, "already_paired")
+
+
+class UnpairLatchView(PairedUserRequiredMixin, TemplateView):
+    """
+    Implement the unpairing operation for a authenticated paired user.
+    """
+
+    NOT_PAIRED_MESSAGE = _("Your account is not paired with Latch.")
+
+    template_name = "django_latch2/unpair_account.html"
+    success_url = reverse_lazy("django_latch2_unpair_complete")
+
+    def post(self, request, *args, **kwargs):  # pylint: disable=unused-argument
+        """
+        Attempt to unpair the user account from the Latch service and
+        redirect to the success URL. If a
+        :class:`django_latch2:execptions.UnpairingLatchError` is raised, re-render
+        the view and include information about the error in the template context.
+        """
+
+        extra_context = {}
+
+        try:
+            self.unpair_account()
+        except UnpairingLatchError as exc:
+            extra_context["unpair_error"] = {
+                "message": exc.message,
+                "code": exc.code,
+                "params": exc.params,
+            }
+        else:
+            return HttpResponseRedirect(self.success_url)
+
+        context_data = self.get_context_data()
+        context_data.update(extra_context)
+        return self.render_to_response(context_data)
+
+    def unpair_account(self):
+        """
+        Unpair the user account from the Latch service.
+        """
+
+        self.check_user()
+        config = LatchUserConfig.objects.get(user=self.request.user)
+        try:
+            api = LatchSDK(Latch(settings.LATCH_APP_ID, settings.LATCH_SECRET_KEY))
+            api.account_unpair(config.account_id)
+        except LatchError as exc:
+            raise UnpairingLatchError(exc.message, exc.code) from exc
+
+        config.delete()
+
+    def check_user(self):
+        """
+        Check if the logged user doesn't have its account latched,
+        raising ``UnpairingLatchError`` if so.
+        """
+
+        if not is_paired(self.request.user):
+            raise UnpairingLatchError(self.NOT_PAIRED_MESSAGE, "not_paired")
