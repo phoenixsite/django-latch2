@@ -70,4 +70,5 @@ class HTTPBackendTestCases(TestCase):
         )
         with self.assertRaisesMessage(ImproperlyConfigured, message):
             from django_latch2 import get_latch_api
+
             get_latch_api()
