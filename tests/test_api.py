@@ -64,9 +64,10 @@ class HTTPBackendTestCases(TestCase):
         :class:`~django.core.exceptions.ImproperlyConfigured` is raised.
         """
 
-        message = "The LATCH_HTTP_BACKEND setting cannot be invalid_backend, "
-        "the only valid values are 'http', 'requests' or 'httpx'."
+        message = (
+            "The LATCH_HTTP_BACKEND setting cannot be invalid_backend, "
+            "the only valid values are 'http', 'requests' or 'httpx'."
+        )
         with self.assertRaisesMessage(ImproperlyConfigured, message):
             from django_latch2 import get_latch_api
-
             get_latch_api()

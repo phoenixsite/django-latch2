@@ -24,7 +24,8 @@ def check_http_backend(chosen_backend):
 
     if chosen_backend not in HTTP_BACKENDS:
         raise ImproperlyConfigured(
-            f"The LATCH_HTTP_BACKEND setting cannot be {chosen_backend}, the only valid values are 'http', 'requests' or 'httpx'."
+            f"The LATCH_HTTP_BACKEND setting cannot be {chosen_backend}, the only "
+            "valid values are 'http', 'requests' or 'httpx'."
         )
 
 
