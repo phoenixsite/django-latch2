@@ -8,10 +8,8 @@ a user's latch.
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 from django.core.exceptions import PermissionDenied
-from django.conf import settings
 
-from latch_sdk.syncio import LatchSDK
-from latch_sdk.syncio.pure import Latch
+from . import get_latch_api
 
 UserModel = get_user_model()
 
@@ -22,11 +20,11 @@ def can_pass_latch(user):
     ``False`` if it's closed.
     """
 
-    api = LatchSDK(Latch(settings.LATCH_APP_ID, settings.LATCH_SECRET_KEY))
     can_pass = True
     try:
         l_config = user.latch_config
-        status = api.account_status(l_config.account_id)
+        latch_api = get_latch_api()
+        status = latch_api.account_status(l_config.account_id)
         can_pass = status.status
     except UserModel.latch_config.RelatedObjectDoesNotExist:
         pass

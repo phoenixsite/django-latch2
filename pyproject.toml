@@ -42,6 +42,11 @@ Documentation = "https://django-latch2.readthedocs.io"
 Source = "https://github.com/phoenixsite/django-latch2"
 Changelog = "https://django-latch2.readthedocs.io/en/stable/changelog.html"
 
+[project.optional-dependencies]
+requests = ["requests"]
+aiohttp = ["aiohttp"]
+httpx = ["httpx"]
+
 [dependency-groups]
 tests = ["nox"]
 

@@ -8,13 +8,11 @@ from django.views.generic.edit import FormView
 from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
-from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
-from latch_sdk.syncio import LatchSDK
-from latch_sdk.syncio.pure import Latch
 from latch_sdk.exceptions import LatchError
 
+from . import get_latch_api
 from .forms import PairLatchForm
 from .models import LatchUserConfig, is_paired
 from .exceptions import PairingLatchError, UnpairingLatchError
@@ -97,8 +95,8 @@ class UnpairLatchView(PairedUserRequiredMixin, TemplateView):
         self.check_user()
         config = LatchUserConfig.objects.get(user=self.request.user)
         try:
-            api = LatchSDK(Latch(settings.LATCH_APP_ID, settings.LATCH_SECRET_KEY))
-            api.account_unpair(config.account_id)
+            latch_api = get_latch_api()
+            latch_api.account_unpair(config.account_id)
         except LatchError as exc:
             raise UnpairingLatchError(exc.message, exc.code) from exc
 

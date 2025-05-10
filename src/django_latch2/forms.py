@@ -7,13 +7,11 @@ Form for latch pairing.
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-from django.conf import settings
 
-from latch_sdk.syncio import LatchSDK
-from latch_sdk.syncio.pure import Latch
 from latch_sdk.exceptions import TokenNotFound, ApplicationAlreadyPaired
 
 from .models import LatchUserConfig
+from . import get_latch_api
 
 # pylint: disable=raise-missing-from
 
@@ -42,8 +40,8 @@ class PairLatchForm(forms.Form):
 
         token = self.cleaned_data["token"]
         try:
-            api = LatchSDK(Latch(settings.LATCH_APP_ID, settings.LATCH_SECRET_KEY))
-            self.account_id = api.account_pair(token)
+            latch_api = get_latch_api()
+            self.account_id = latch_api.account_pair(token)
             return token
         except TokenNotFound:
             raise ValidationError(self.NOT_FOUND_TOKEN_MESSAGE, code="not_found")
