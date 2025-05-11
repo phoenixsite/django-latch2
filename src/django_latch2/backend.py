@@ -24,11 +24,9 @@ def can_pass_latch(user):
     """
 
     can_pass = True
+    latch_api = get_latch_api()
     try:
         l_config = user.latch_config
-        latch_api = get_latch_api()
-        status = latch_api.account_status(l_config.account_id)
-        can_pass = status.status
     except UserModel.latch_config.RelatedObjectDoesNotExist:
         # In order to prevent an attacker knowing a user has configured
         # the Latch service, we need to make a mock call to the API
@@ -38,6 +36,9 @@ def can_pass_latch(user):
             latch_api.account_status(get_random_string(64))
         except LatchError:
             pass
+    else:
+        status = latch_api.account_status(l_config.account_id)
+        can_pass = status.status
 
     return can_pass
 
