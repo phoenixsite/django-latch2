@@ -8,6 +8,9 @@ a user's latch.
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 from django.core.exceptions import PermissionDenied
+from django.utils.crypto import get_random_string
+
+from latch_sdk.exceptions import LatchError
 
 from . import get_latch_api
 
@@ -27,7 +30,14 @@ def can_pass_latch(user):
         status = latch_api.account_status(l_config.account_id)
         can_pass = status.status
     except UserModel.latch_config.RelatedObjectDoesNotExist:
-        pass
+        # In order to prevent an attacker knowing a user has configured
+        # the Latch service, we need to make a mock call to the API
+        # so the latency difference between a user with a configured latch
+        #  and a user without a configured latch.
+        try:
+            latch_api.account_status(get_random_string(64))
+        except LatchError:
+            pass
 
     return can_pass
 
