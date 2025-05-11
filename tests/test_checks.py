@@ -112,7 +112,7 @@ class DependenciesCheckTest(SimpleTestCase):
 
         message = (
             "(django_latch2.E104) 'django_latch2.backend.LatchModelBackendMixin' must "
-            "be a subclass of some in AUTHENTICATION_BACKEND in order to use the "
+            "be a subclass of some in AUTHENTICATION_BACKENDS in order to use the "
             "django_latch2 application."
         )
         with self.assertRaisesMessage(SystemCheckError, message):

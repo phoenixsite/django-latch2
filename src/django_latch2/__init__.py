@@ -31,7 +31,7 @@ def check_http_backend(chosen_backend):
 
 def get_latch_api():
     """Return the Latch SDK for accessing Latch's API."""
-    LATCH_HTTP_BACKEND = getattr(settings, "LATCH_HTTP_BACKEND", "http")  # pylint: disable=invalid-name
-    check_http_backend(LATCH_HTTP_BACKEND)
-    core_class = import_string(HTTP_BACKENDS[LATCH_HTTP_BACKEND])
+    http_backend = getattr(settings, "LATCH_HTTP_BACKEND", "http")  # pylint: disable=invalid-name
+    check_http_backend(http_backend)
+    core_class = import_string(HTTP_BACKENDS[http_backend])
     return LatchSDK(core_class(settings.LATCH_APP_ID, settings.LATCH_SECRET_KEY))

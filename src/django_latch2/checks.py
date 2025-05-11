@@ -86,7 +86,7 @@ def check_dependencies(app_configs, **kwargs):  # pylint: disable=unused-argumen
         errors.append(
             checks.Error(
                 "'django_latch2.backend.LatchModelBackendMixin' must be a subclass of "
-                "some in AUTHENTICATION_BACKEND in order to use the "
+                "some in AUTHENTICATION_BACKENDS in order to use the "
                 "django_latch2 application.",
                 id="django_latch2.E104",
             )
