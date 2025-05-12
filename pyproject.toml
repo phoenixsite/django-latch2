@@ -2,6 +2,8 @@
 name = "django-latch2"
 version = "5.2.0"
 authors = [
+  { name = "Javier Olascoaga", email = "jolascoaga@rootedcon.es"},
+  { name = "Javier Moral", email = "moraljlara@gmail.com"},
   { name = "Carlos Romero Cruz", email = "phoenixsitegit@outlook.com"}
 ]
 description = "Latch support for Django."

@@ -1,7 +1,7 @@
 .. _index:
 
 django-latch2 |release|
-===========================
+=======================
 
 
 
@@ -16,10 +16,12 @@ Contents
    quickstart
 
 .. toctree::
-    :caption: Authentication backends
+    :caption: Access control
     :maxdepth: 1
 
     authentication-backends
+    mixins
+    decorators
 
 .. toctree::
     :caption: For developers
@@ -27,7 +29,6 @@ Contents
 
     views
     forms
-    custom-backends
     exceptions
     settings
 

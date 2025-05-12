@@ -31,7 +31,7 @@ def can_pass_latch(user):
         # In order to prevent an attacker knowing a user has configured
         # the Latch service, we need to make a mock call to the API
         # so the latency difference between a user with a configured latch
-        #  and a user without a configured latch.
+        #  and a user without is not significant enough.
         try:
             latch_api.account_status(get_random_string(64))
         except LatchError:

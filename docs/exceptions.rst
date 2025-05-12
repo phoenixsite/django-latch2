@@ -3,3 +3,9 @@
 
 Exception classes
 =================
+
+.. autoexception:: BaseLatchError
+
+.. autoexception:: PairingLatchError
+
+.. autoexception:: UnpairingLatchError

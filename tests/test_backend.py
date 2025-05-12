@@ -11,7 +11,7 @@ from django.utils.crypto import get_random_string
 
 from latch_sdk.models import Status
 
-from django_latch2.backend import can_pass_latch, LatchDefaultModelBackend
+from django_latch2.backends import can_pass_latch, LatchDefaultModelBackend
 
 from .base import CreateLatchConfigMixin, mock_status_true
 

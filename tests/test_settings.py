@@ -47,7 +47,7 @@ TEMPLATES = [
         },
     }
 ]
-AUTHENTICATION_BACKENDS = ["django_latch2.backend.LatchDefaultModelBackend"]
+AUTHENTICATION_BACKENDS = ["django_latch2.backends.LatchDefaultModelBackend"]
 LATCH_APP_ID = "a" * 20
 LATCH_SECRET_KEY = "b" * 64
 LATCH_HTTP_BACKEND = "http"
