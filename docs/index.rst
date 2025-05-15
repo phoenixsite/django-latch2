@@ -3,7 +3,11 @@
 django-latch2 |release|
 =======================
 
+.. important:: **django-latch2 is still under development**
 
+    Though it may seem already suitable for deployment environments, it
+    relies on the `latch_sdk_python <https://github.com/Telefonica/latch-sdk-python>`_,
+    which doesn't have still a stable version.
 
 Contents
 --------

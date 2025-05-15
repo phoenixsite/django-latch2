@@ -5,5 +5,11 @@ Backends
 Changelog
 changelog
 django
+env
+Mixins
+mixins
+Mixin
+mixin
+PyPI
 unpair
 unpairing

@@ -30,7 +30,12 @@ def check_http_backend(chosen_backend):
 
 
 def get_latch_api():
-    """Return the Latch SDK for accessing Latch's API."""
+    """
+    Return the Latch SDK for accessing Latch's API.
+
+    If the setting :data:`LATCH_HTTP_BACKEND` is not set, the default
+    would be the 'http' one, which does not require a third-party package.
+    """
     http_backend = getattr(settings, "LATCH_HTTP_BACKEND", "http")  # pylint: disable=invalid-name
     check_http_backend(http_backend)
     core_class = import_string(HTTP_BACKENDS[http_backend])

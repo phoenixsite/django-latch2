@@ -1,8 +1,8 @@
 .. _settings:
 .. module:: django.conf.settings
 
-Custom settings
-===============
+Settings
+========
 
 Required settings
 -----------------

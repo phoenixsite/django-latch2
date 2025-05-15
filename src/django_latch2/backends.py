@@ -66,7 +66,7 @@ class LatchDefaultModelBackend(LatchModelBackendMixin, ModelBackend):
     the user's latch is on.
 
     This backend is useful for a fast integration of the Latch service
-    into a Django project that uses the default authentication backend,
-    but it has `the same limitations
+    into a Django project that uses the default authentication process,
+    so it has `the same limitations
     <https://docs.djangoproject.com/en/5.2/topics/auth/customizing/#specifying-authentication-backends>`_.
     """
