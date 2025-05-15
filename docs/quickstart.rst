@@ -43,7 +43,7 @@ from the attributes ``LATCH_APP_ID`` and ``LATCH_SECRET_KEY``.
 
 To set these two parameters, I recommend you using environment variables or a remote
 credential service, like `HashiCorp Vault <https://www.hashicorp.com/es/products/vault>`_
-or any other from some cloud provider (no, they haven't paid me anything).
+or any other from some cloud provider (no, they didn't pay me anything).
 
 For example, to set these parameters using environment variables you need first to the session
 where the application will run
@@ -62,8 +62,8 @@ where the application will run
         $env:LATCH_APP_ID = "<your-app-id>"
         $env:LATCH_APP_SECRET = "<you-app-secret>"
 
-or, even better, write those in an `.env file <https://www.dotenv.org/docs/security/env.html>`_
-, which should have those permissions to be read only by the OS user who will run the
+or, even better, write those in an `.env file <https://www.dotenv.org/docs/security/env.html>`_,
+which should have those permissions to be read only by the OS user who will run the
 `web server <https://docs.djangoproject.com/en/5.2/howto/deployment/#how-to-deploy-django>`_
 (or the `run_server command <https://docs.djangoproject.com/en/5.2/ref/django-admin/#django-admin-runserver>`_,
 in case of still developing the application):
@@ -99,19 +99,21 @@ Then, you just need to get those variables from add to your setting module:
         LATCH_APP_ID = os.getenv("LATCH_APP_ID")
         LATCH_APP_SECRET = os.getenv("LATCH_APP_SECRET")
 
-For more information about security during the development and deployment of a Django application, I
-recommend reading the `security section of the Django documentation <https://docs.djangoproject.com/en/5.2/topics/security/>`_
+For more information about security during the development and deployment
+of a Django application, I recommend reading the `security section of the Django documentation <https://docs.djangoproject.com/en/5.2/topics/security/>`_
 You would have committed a war crime if you haven't already done it. (really, just read it).
 
 Setting up the authentication backend
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now, in order to let Latch block or allow the access to your users, you need to
-modify your authentication backends.
+Now, in order to let Latch block or allow the access to your users, you need
+to modify your authentication backends.
 
 If you are using the `Django's default authentication process <https://docs.djangoproject.com/en/5.2/topics/auth/default/>`_,
-then you must substitute, or add if it is not specified in your settings module, the :class:`~django.contrib.auth.backends.ModelBackend`
-for :class:`~django_latch2.backends.LatchDefaultModelBackend`:
+then you must substitute, or add if it is not specified in your settings
+module, the :class:`~django.contrib.auth.backends.ModelBackend`
+for :class:`~django_latch2.backends.LatchDefaultModelBackend` in
+the :setting:`AUTHENTICATION_BACKENDS` list:
 
 .. code-block:: python
 
@@ -157,7 +159,7 @@ Then, it must be added to your settings module:
 
     In order to block or allow all the requested attempts from authenticated users, the authentication backend
     that is subclass of :class:`~django_latch2.backends.LatchModelBackendMixin` must be the first one
-    in the :data:`AUTHENTICATION_BACKENDS` list.
+    in the :setting:`AUTHENTICATION_BACKENDS` list.
 
 In case your are using a `remote authentication service <https://docs.djangoproject.com/en/5.2/howto/auth-remote-user/>`_
 you will have to implement the Latch access from that remote service.
@@ -231,8 +233,8 @@ the following context:
 ``unpair_error``
     If the user confirmed the unpairing via HTTP ``POST`` but the unpairing operation
     failed in the Latch service, this variable will be present and will contain
-    a :class:`dict` with information about the error: a message (``message``), an error code
-    (``code``) and extra parameters (``params``).
+    a :class:`dict` with information about the error: a message (``'message'``), an error code
+    (``'code'``) and extra parameters (``'params'``).
 
 ``django_latch2/unpair_complete.html``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

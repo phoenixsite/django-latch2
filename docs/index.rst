@@ -9,6 +9,13 @@ django-latch2 |release|
     relies on the `latch_sdk_python <https://github.com/Telefonica/latch-sdk-python>`_,
     which doesn't have still a stable version.
 
+Authorship
+----------
+
+Latch support for Django was initially developed by Javier Olascoaga and RootedCON until 2016.
+Then, in 2019 the project continued by Javier Morales until 2022. After May 2025,
+Carlos Romero Cruz continued the development.
+
 Contents
 --------
 
@@ -24,8 +31,7 @@ Contents
     :maxdepth: 1
 
     authentication-backends
-    mixins
-    decorators
+    view-access-control
 
 .. toctree::
     :caption: For developers
@@ -33,6 +39,7 @@ Contents
 
     views
     forms
+    models
     exceptions
     settings
 

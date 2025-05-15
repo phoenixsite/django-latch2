@@ -15,13 +15,19 @@ from latch_sdk.exceptions import LatchError
 from . import get_latch_api
 from .forms import PairLatchForm
 from .models import LatchUserConfig, is_paired
-from .exceptions import PairingLatchError, UnpairingLatchError
+from .exceptions import UnpairingLatchError
 from .mixins import UnpairedUserRequiredMixin, PairedUserRequiredMixin
 
 
 class PairLatchView(UnpairedUserRequiredMixin, FormView):
     """
-    Implement the pairing operation for an authenticated unpaired user.
+    Implement the pairing operation for an authenticated and unpaired user.
+
+    It is a subclass of :class:`~django_latch2.mixins.UnpairedUserRequiredMixin`,
+    so only authenticated users without the latch configured can access it.
+
+    .. automethod:: form_valid
+
     """
 
     ALREADY_PAIRED_MESSAGE = _("Your account is already paired.")
@@ -33,28 +39,29 @@ class PairLatchView(UnpairedUserRequiredMixin, FormView):
     def form_valid(self, form):
         """
         If the form is valid, attempt to pair the user account to the Latch service
-        and redirect to the sucess URL. If a :class:`django_latch2:exceptions.PairingLatchError`
+        and redirect to the success URL. If a :class:`django_latch2:exceptions.PairingLatchError`
         is raised, instead re-render the form and include information about the error in the
         template context.
+
+        :param django_latch2.forms.PairLatchForm form: The token form to use.
         """
 
-        self.check_user()
         form.pair_account(self.request.user)
         return super().form_valid(form)
-
-    def check_user(self):
-        """
-        Check if the logged user has its account already paired,
-        raising ``PairingLatchError`` if so.
-        """
-
-        if is_paired(self.request.user):
-            raise PairingLatchError(self.ALREADY_PAIRED_MESSAGE, "already_paired")
 
 
 class UnpairLatchView(PairedUserRequiredMixin, TemplateView):
     """
     Implement the unpairing operation for a authenticated paired user.
+
+    It is a subclass of :class:`~django_latch2.mixins.PairedUserRequiredMixin`,
+    so only authenticated users with the latch configured can access it.
+
+    .. automethod:: unpair_account
+
+    .. automethod:: post
+
+    .. automethod:: check_user
     """
 
     NOT_PAIRED_MESSAGE = _("Your account is not paired with Latch.")

@@ -5,3 +5,4 @@ sphinx-inline-tabs
 sphinx-notfound-page
 sphinxext-opengraph
 PyStemmer
+sphinxcontrib-django

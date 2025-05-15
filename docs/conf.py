@@ -21,7 +21,7 @@ settings.configure(
 django.setup()
 
 project = "django-latch2"
-copyright = "Carlos Romero Cruz"
+copyright = "Carlos Romero Cruz and contributors"
 author = "Carlos Romero Cruz"
 version = get_version("django_latch2")
 release = version
@@ -33,6 +33,7 @@ extensions = [
     "sphinxext.opengraph",
     "sphinx.ext.viewcode",
     "sphinx_inline_tabs",
+    "sphinxcontrib_django",
 ]
 
 templates_path = ["_templates"]
@@ -46,6 +47,7 @@ intersphinx_mapping = {
         "https://docs.djangoproject.com/en/stable/_objects/",
     ),
     "python": ("https://docs.python.org/3", None),
+    "requests": ("https://requests.readthedocs.io/en/stable/", None),
 }
 
 # Spelling check needs an additional module that is not installed by default.
@@ -54,7 +56,7 @@ if "spelling" in sys.argv:
     extensions.append("sphinxcontrib.spelling")
 
 # Spelling language.
-spelling_lang = "en_US"
+spelling_lang = "en_UK"
 
 # Location of word list.
 spelling_word_list_filename = "spelling_wordlist.txt"

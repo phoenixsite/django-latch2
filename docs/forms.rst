@@ -4,7 +4,8 @@
 Form classes
 ============
 
-.. autoclass:: PairLatchForm
+The only form required by ``django-latch2`` is the one used for setting up the
+latch, which only asks for the generated token in the user's mobile phone
+Latch app.
 
-    .. automethod:: clean_token
-    .. automethod:: pair_account
+.. autoclass:: PairLatchForm

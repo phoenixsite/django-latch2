@@ -3,8 +3,8 @@
 Frequently-asked questions
 ==========================
 
-Why did the first release of ``django-latch2`` start with version 5.2.0?
-------------------------------------------------------------------------
+Why did a version ``django-latch2`` jumped from 0.3 to 5.2.0?
+-------------------------------------------------------------
 
 Because this project follows the `DjangoVer scheme <https://www.b-list.org/weblog/2024/nov/18/djangover/>`_.
 This version numbering helps knowing quickly the latest Django version supported by the

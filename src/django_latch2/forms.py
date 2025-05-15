@@ -19,12 +19,16 @@ from . import get_latch_api
 class PairLatchForm(forms.Form):
     """
     A form for pairing the user account to the Latch service.
+
+    .. automethod:: clean_token
+
+    .. automethod:: pair_account
     """
 
     NOT_FOUND_TOKEN_MESSAGE = _("The token you provided hasn't been found.")
     ALREADY_PAIRED_MESSAGE = _("Your account is already paired.")
 
-    token = forms.CharField()
+    token = forms.CharField(max_length=100)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -36,6 +40,13 @@ class PairLatchForm(forms.Form):
 
         Because the validation of the token must be done with Latch and it
         returns the account id if the token is valid, we cached the account id.
+
+        If the token is not found by the Latch service, then a
+        :exc:`django.core.exceptions.ValidationError` with the code
+        ``'not_found'`` is raised.
+        If the user has already pair its account, then a
+        :exc:`django.core.exceptions.ValidationError` is raised with
+        the code ``'already_paired'``.
         """
 
         token = self.cleaned_data["token"]
@@ -55,6 +66,10 @@ class PairLatchForm(forms.Form):
     def pair_account(self, user):
         """
         Pair the user account with a Latch account id.
+
+        As the account id has been already obtained by checking
+        the validity of the token, this method only creates the instance
+        for storing the account id.
         """
 
         config = LatchUserConfig.objects.create(user=user, account_id=self.account_id)

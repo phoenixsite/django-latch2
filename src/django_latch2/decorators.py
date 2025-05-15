@@ -30,8 +30,23 @@ def first_authenticated_then_other(condition_func, user):
 
 def paired_user_required(function=None):
     """
-    Decorator for views that checks that authenticated user is paired with
+    Decorator for views that checks that the authenticated user is paired with
     the Latch service.
+
+    It has the same the behaviour as :class:`~django_latch2.mixins.PairedUserRequiredMixin`,
+    which is the following:
+
+    * If the user isn't logged in, it redirects to :setting:`settings.LOGIN_URL <LOGIN_URL>`
+      passing the current absolute path in the query string.
+    * If the user is authenticated but unpaired, then the decorator will
+      raise :exc:`~django.core.exceptions.PermissionDenied`, prompting
+      `the 403 (HTTP Forbidden) view
+      <https://docs.djangoproject.com/en/5.2/ref/views/#http-forbidden-view>`_
+      instead of redirecting to the login page.
+
+    This decorator implies that a user must be logged in, so using
+    :func:`~django.contrib.auth.decorators.login_required` is not necessary
+    when :func:`~django_latch2.decorators.paired_user_required` is present.
     """
 
     actual_decorator = user_passes_test(
@@ -44,8 +59,23 @@ def paired_user_required(function=None):
 
 def unpaired_user_required(function=None):
     """
-    Decorator for views that checks that the authenticated user is not paired with
-    the Latch service.
+    Decorator for views that checks that the authenticated user is not
+    paired with the Latch service.
+
+    It has the same the behaviour as :class:`~django_latch2.mixins.UnpairedUserRequiredMixin`,
+    which is the following:
+
+    * If the user isn't logged in, it redirects to :setting:`settings.LOGIN_URL <LOGIN_URL>`
+      passing the current absolute path in the query string.
+    * If the user is authenticated but paired, then the decorator will
+      raise :exc:`~django.core.exceptions.PermissionDenied`, prompting
+      `the 403 (HTTP Forbidden) view
+      <https://docs.djangoproject.com/en/5.2/ref/views/#http-forbidden-view>`_
+      instead of redirecting to the login page.
+
+    This decorator implies that a user must be logged in, so using
+    :func:`~django.contrib.auth.decorators.login_required` is not necessary
+    when :func:`~django_latch2.decorators.unpaired_user_required` is present.
     """
 
     def not_paired(user):

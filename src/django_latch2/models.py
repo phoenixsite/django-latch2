@@ -23,8 +23,15 @@ class LatchUserConfig(models.Model):
     Store the necessary configuration to associate
     a user to the Latch service.
 
-    The only parameter required is the account id, which is
-    a code with 64 characters.
+    .. attribute:: account_id
+
+        A 64-long :class:`~django.db.models.CharField` that identifies the
+        user in the Latch service.
+
+    .. attribute:: user
+
+        A :class:`~django.db.models.OneToOneField` that identifies the user
+        who has configured the Latch service.
     """
 
     user = models.OneToOneField(
