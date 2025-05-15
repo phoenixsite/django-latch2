@@ -108,6 +108,7 @@ distribution = true
 source-includes = [
     ".editorconfig",
     ".pre-commit-config.yaml",
+    ".readthedocs.yaml",
     "docs/",
     "noxfile.py",
     "pdm.lock",
