@@ -56,7 +56,7 @@ if "spelling" in sys.argv:
     extensions.append("sphinxcontrib.spelling")
 
 # Spelling language.
-spelling_lang = "en_UK"
+spelling_lang = "en_US"
 
 # Location of word list.
 spelling_word_list_filename = "spelling_wordlist.txt"
