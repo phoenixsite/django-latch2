@@ -51,7 +51,7 @@
             python-version: ${{ matrix.python-version }}
 
         - name: Run tests
-          run: "uv run nox --non-interactive --error-on-external-run --tag tests --python ${{ matrix.python-version }}"
+          run: "uvx nox --non-interactive --error-on-external-run --tag tests --python ${{ matrix.python-version }}"
 
         - name: Upload coverage data
           uses: actions/upload-artifact@v4
@@ -84,14 +84,14 @@
 
         - name: Combine coverage & fail under 95%
           run: |
-            uv run coverage combine
-            uv run coverage html --skip-covered --skip-empty
+            uvx coverage combine
+            uvx coverage html --skip-covered --skip-empty
 
             # Report and write to summary.
-            uv run coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
+            uvx coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
 
             # Report again and fail if under 100%.
-            uv run coverage report --fail-under=95
+            uvx coverage report --fail-under=95
 
         - name: Upload HTML report if check failed.
           uses: actions/upload-artifact@v4
@@ -119,7 +119,7 @@
             python-version: "3.12"
 
         - name: Run documentation checks
-          run: "uv run nox --non-interactive --error-on-external-run --tag docs"
+          run: "uvx nox --non-interactive --error-on-external-run --tag docs"
 
 
     lint-format:
@@ -141,9 +141,9 @@
             python-version: "3.13"
 
         - name: Check code formatting
-          run: "uv run nox --non-interactive --error-on-external-run --tag formatters --python 3.13"
+          run: "uvx nox --non-interactive --error-on-external-run --tag formatters --python 3.13"
         - name: Lint code
-          run: "uv run nox --non-interactive --error-on-external-run --tag linters --python 3.13"
+          run: "uvx nox --non-interactive --error-on-external-run --tag linters --python 3.13"
 
 
     check-package:
@@ -165,7 +165,7 @@
             python-version: "3.12"
 
         - name: Check package
-          run: "uv run nox --non-interactive --error-on-external-run --tag packaging --python 3.13"
+          run: "uvx nox --non-interactive --error-on-external-run --tag packaging --python 3.13"
 
 
     required-checks-pass:
