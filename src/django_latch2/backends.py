@@ -67,7 +67,7 @@ class LatchModelBackendMixin:
         application, then a :exc:`~django.core.exceptions.PermissionDenied`
         is raised.
 
-        Though it may seems this break the original "contract" of the
+        Though it may seems this breaks the original "contract" of the
         :meth:`~django.contrib.auth.backends.BaseBackend.user_can_authenticate`
         method, there is no other place to raise the exception without
         overriding the

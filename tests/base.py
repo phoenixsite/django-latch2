@@ -5,8 +5,13 @@ Base classes for other test cases to inherit from.
 # SPDX-License-Identifier: BSD-3-Clause
 
 from unittest.mock import patch, Mock
+from urllib.parse import urlencode
 
 from django.contrib.auth import get_user_model
+from django.urls import reverse as django_reverse
+from django.utils.version import get_complete_version as django_version
+from django.http import QueryDict
+
 from django.test import TestCase
 
 from latch_sdk.models import Status
@@ -14,6 +19,39 @@ from latch_sdk.models import Status
 from django_latch2.models import LatchUserConfig
 
 ACCOUNT_ID = "a" * 64
+
+
+def reverse(
+    viewname,
+    urlconf=None,
+    args=None,
+    kwargs=None,
+    current_app=None,
+    *,
+    query=None,
+    fragment=None,
+):  # pylint: disable=too-many-arguments
+    """
+
+    It is required to reimplement it because the query argument is not available in
+    Django versions < 5.2.
+
+    Copied from django.urls.reverse in Django 5.2.
+    """
+    if django_version() >= (5, 2):
+        resolved_url = django_reverse(
+            viewname, urlconf, args, kwargs, current_app, query=query, fragment=fragment
+        )
+    else:
+        resolved_url = django_reverse(viewname, urlconf, args, kwargs, current_app)
+        if query is not None:
+            if isinstance(query, QueryDict):
+                query_string = query.urlencode()
+            else:
+                query_string = urlencode(query, doseq=True)
+            if query_string:
+                resolved_url += "?" + query_string
+    return resolved_url
 
 
 class CreateUserMixin:

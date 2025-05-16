@@ -119,7 +119,7 @@ the :setting:`AUTHENTICATION_BACKENDS` list:
 
     AUTHENTICATION_BACKENDS = ["django_latch2.backends.LatchDefaultModelBackend"]
 
-if you have implemented a custom authentication process which uses a different authentication backend,
+If you have implemented a custom authentication process which uses a different authentication backend,
 you can also add to it the Latch check by creating an inherited class from the :class:`~django_latch2.backends.LatchModelBackendMixin`
 and your custom backend:
 
@@ -242,3 +242,20 @@ the following context:
 Used after successfully unpaired the authenticated user with Latch. It should
 inform the user that it can no longer block or allow the access to the Django
 application by using the Latch mobile app.
+
+Finally
+-------
+
+The last step would be to run the command in your Django root directory:
+
+.. tab:: Unix-based
+
+    .. code-block:: shell
+
+        python manage.py migrate
+
+.. tab:: Windows
+
+    .. code-block:: shell
+
+        py manage.py migrate

@@ -68,6 +68,7 @@ def tests_with_coverage(session, django):
     session.install(
         f"Django~={django}.0",
         ".[tests,requests,httpx]",
+        "django-allauth",
         "coverage",
         'tomli; python_full_version < "3.11.0a7"',
     )
@@ -280,9 +281,9 @@ def lint_pylint(session):
     Lint code with Pylint.
     """
 
-    session.install("pylint", "pylint-django", ".[tests]")
+    session.install("pylint", "pylint-django", "django-allauth", ".[tests]")
     session.run(os.path.join(session.bin, "python"), "-Im", "pylint", "--version")
-    os.environ["DJANGO_SETTINGS_MODULE"] = "tests.test_settings"
+    os.environ["DJANGO_SETTINGS_MODULE"] = "tests.base_authentication.test_settings"
     session.run(
         os.path.join(session.bin, "python"),
         "-Im",

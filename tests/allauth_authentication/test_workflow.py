@@ -4,15 +4,10 @@ Tests for the pairing and unpairing operations as a whole.
 
 # SPDX-License-Identifier: BSD-3-Clause
 
-from urllib.parse import urlencode
-
 from http import HTTPStatus
 from unittest.mock import patch, Mock
 
-from django.utils.version import get_complete_version as django_version
-from django.http import QueryDict
 from django.test import TestCase
-from django.urls import reverse as django_reverse
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils.crypto import get_random_string
@@ -22,45 +17,13 @@ from latch_sdk.exceptions import TokenNotFound, ApplicationAlreadyPaired, LatchE
 from django_latch2.forms import PairLatchForm
 from django_latch2.models import LatchUserConfig
 
-from .base import (
+from ..base import (
     LoggedInTestCase,
     CreateLatchConfigMixin,
     mock_status_true,
     mock_status_false,
+    reverse,
 )
-
-
-def reverse(
-    viewname,
-    urlconf=None,
-    args=None,
-    kwargs=None,
-    current_app=None,
-    *,
-    query=None,
-    fragment=None,
-):  # pylint: disable=too-many-arguments
-    """
-
-    It is required to reimplement it because the query argument is not available in
-    Django versions < 5.2.
-
-    Copied from django.urls.reverse in Django 5.2.
-    """
-    if django_version() >= (5, 2):
-        resolved_url = django_reverse(
-            viewname, urlconf, args, kwargs, current_app, query=query, fragment=fragment
-        )
-    else:
-        resolved_url = django_reverse(viewname, urlconf, args, kwargs, current_app)
-        if query is not None:
-            if isinstance(query, QueryDict):
-                query_string = query.urlencode()
-            else:
-                query_string = urlencode(query, doseq=True)
-            if query_string:
-                resolved_url += "?" + query_string
-    return resolved_url
 
 
 class AnonymousUserTests(TestCase):
