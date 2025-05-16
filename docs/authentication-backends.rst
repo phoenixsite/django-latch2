@@ -4,6 +4,8 @@
 Authentication backends
 =======================
 
+.. autofunction:: can_pass_latch
+
 .. autoclass:: LatchModelBackendMixin
 
 .. autoclass:: LatchDefaultModelBackend

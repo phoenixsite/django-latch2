@@ -22,7 +22,12 @@ from latch_sdk.exceptions import TokenNotFound, ApplicationAlreadyPaired, LatchE
 from django_latch2.forms import PairLatchForm
 from django_latch2.models import LatchUserConfig
 
-from .base import LoggedInTestCase, CreateLatchConfigMixin, mock_status_true
+from .base import (
+    LoggedInTestCase,
+    CreateLatchConfigMixin,
+    mock_status_true,
+    mock_status_false,
+)
 
 
 def reverse(
@@ -256,9 +261,6 @@ class UnpairedUserTests(LoggedInTestCase):
 ACCOUNT_ID2 = get_random_string(64)
 
 
-@patch(
-    "latch_sdk.syncio.LatchSDK.account_status", new=Mock(return_value=mock_status_true)
-)
 class PairedUserTests(CreateLatchConfigMixin, LoggedInTestCase):
     """Tests for an already paired authenticated user."""
 
@@ -282,6 +284,10 @@ class PairedUserTests(CreateLatchConfigMixin, LoggedInTestCase):
         UserModel = get_user_model()  # pylint: disable=invalid-name
         return {UserModel.USERNAME_FIELD: "bob"}
 
+    @patch(
+        "latch_sdk.syncio.LatchSDK.account_status",
+        new=Mock(return_value=mock_status_true),
+    )
     def test_pairing(self):
         """
         An already paired user should not be able to access the pair view.
@@ -290,6 +296,10 @@ class PairedUserTests(CreateLatchConfigMixin, LoggedInTestCase):
         resp = self.client.get(reverse("django_latch2_pair"))
         self.assertEqual(resp.status_code, HTTPStatus.FORBIDDEN)
 
+    @patch(
+        "latch_sdk.syncio.LatchSDK.account_status",
+        new=Mock(return_value=mock_status_true),
+    )
     def test_unpairing_get(self):
         """
         The HTTP ``GET`` method to the unpairing view use the appropiate
@@ -300,6 +310,10 @@ class PairedUserTests(CreateLatchConfigMixin, LoggedInTestCase):
         self.assertEqual(resp.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(resp, "django_latch2/unpair_account.html")
 
+    @patch(
+        "latch_sdk.syncio.LatchSDK.account_status",
+        new=Mock(return_value=mock_status_true),
+    )
     def test_no_unpairing_on_get(self):
         """
         Unpairing only occurs on HTTP ``POST``, not ``GET``.
@@ -310,6 +324,10 @@ class PairedUserTests(CreateLatchConfigMixin, LoggedInTestCase):
         self.assertTrue(LatchUserConfig.objects.filter(user=self.user).exists())
 
     @patch("latch_sdk.syncio.LatchSDK.account_unpair", new=Mock(return_value=True))
+    @patch(
+        "latch_sdk.syncio.LatchSDK.account_status",
+        new=Mock(return_value=mock_status_true),
+    )
     def test_success_is_unpaired(self):
         """
         Valid unpairing sets the user as unpaired.
@@ -319,6 +337,10 @@ class PairedUserTests(CreateLatchConfigMixin, LoggedInTestCase):
         self.assertRedirects(resp, reverse("django_latch2_unpair_complete"))
         self.assertFalse(LatchUserConfig.objects.filter(user=self.user).exists())
 
+    @patch(
+        "latch_sdk.syncio.LatchSDK.account_status",
+        new=Mock(return_value=mock_status_true),
+    )
     def test_paired_user_required_decorator(self):
         """
         The paired_user_required decorator allows the access to paired users.
@@ -333,6 +355,10 @@ class PairedUserTests(CreateLatchConfigMixin, LoggedInTestCase):
                 self.assertEqual(resp.status_code, HTTPStatus.OK)
                 self.assertTemplateUsed(resp, "django_latch2/require_paired_user.html")
 
+    @patch(
+        "latch_sdk.syncio.LatchSDK.account_status",
+        new=Mock(return_value=mock_status_true),
+    )
     def test_unpair_user_required_decorator(self):
         """
         The unpaired_user_required forbids the access to paired users.
@@ -352,6 +378,10 @@ class PairedUserTests(CreateLatchConfigMixin, LoggedInTestCase):
         "latch_sdk.syncio.LatchSDK.account_unpair",
         new=Mock(side_effect=LatchError("", "")),
     )
+    @patch(
+        "latch_sdk.syncio.LatchSDK.account_status",
+        new=Mock(return_value=mock_status_true),
+    )
     def test_unpairing_failure(self):
         """Error during unpairing."""
         resp = self.client.post(reverse("django_latch2_unpair"))
@@ -359,3 +389,19 @@ class PairedUserTests(CreateLatchConfigMixin, LoggedInTestCase):
         self.assertIn("unpair_error", resp.context)
         self.assertIn("message", resp.context["unpair_error"])
         self.assertIn("code", resp.context["unpair_error"])
+
+    @patch(
+        "latch_sdk.syncio.LatchSDK.account_status",
+        new=Mock(return_value=mock_status_false),
+    )
+    def test_login_when_off(self):
+        """
+        A user who has its latch on should not be able to login.
+        """
+
+        self.client.logout()
+        logged = self.client.login(
+            username=self.user.username,
+            password=self.valid_data()["raw_password"],
+        )
+        self.assertFalse(logged)

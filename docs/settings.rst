@@ -80,4 +80,4 @@ Optional settings
             py -m pip install django-latch2[httpx]
 
     Then, `latch_sdk_python <https://github.com/Telefonica/latch-sdk-python>`_
-    will use `httpx.Client <https://www.python-httpx.org/api/#client>`.
+    will use `httpx.Client <https://www.python-httpx.org/api/#client>`_.

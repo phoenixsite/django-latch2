@@ -9,13 +9,9 @@ from django.test import TestCase
 from django.core.exceptions import PermissionDenied
 from django.utils.crypto import get_random_string
 
-from latch_sdk.models import Status
-
 from django_latch2.backends import can_pass_latch, LatchDefaultModelBackend
 
-from .base import CreateLatchConfigMixin, mock_status_true
-
-mock_status_false = Status.build_from_dict({"operation_id": 1, "status": "off"})
+from .base import CreateLatchConfigMixin, mock_status_true, mock_status_false
 
 
 class LatchBackendTestCase(CreateLatchConfigMixin, TestCase):

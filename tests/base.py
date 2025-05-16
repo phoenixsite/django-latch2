@@ -67,6 +67,7 @@ class CreateLatchConfigMixin(CreateUserMixin):
 
 
 mock_status_true = Status.build_from_dict({"operation_id": 1, "status": "on"})
+mock_status_false = Status.build_from_dict({"operation_id": 1, "status": "off"})
 
 
 class LoggedInTestCase(CreateUserMixin, TestCase):  # pylint: disable=abstract-method
