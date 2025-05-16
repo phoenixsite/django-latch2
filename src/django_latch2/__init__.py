@@ -17,18 +17,6 @@ HTTP_BACKENDS = {
 }
 
 
-def check_http_backend(chosen_backend):
-    """
-    Check if the chosen backend is between those available.
-    """
-
-    if chosen_backend not in HTTP_BACKENDS:
-        raise ImproperlyConfigured(
-            f"The LATCH_HTTP_BACKEND setting cannot be {chosen_backend}, the only "
-            "valid values are 'http', 'requests' or 'httpx'."
-        )
-
-
 def get_latch_api():
     """
     Return the Latch SDK for accessing Latch's API.
@@ -36,7 +24,14 @@ def get_latch_api():
     If the setting :data:`LATCH_HTTP_BACKEND` is not set, the default
     would be the 'http' one, which does not require a third-party package.
     """
+
     http_backend = getattr(settings, "LATCH_HTTP_BACKEND", "http")  # pylint: disable=invalid-name
-    check_http_backend(http_backend)
-    core_class = import_string(HTTP_BACKENDS[http_backend])
+
+    try:
+        core_class = import_string(HTTP_BACKENDS[http_backend])
+    except KeyError as exc:
+        raise ImproperlyConfigured(
+            f"The LATCH_HTTP_BACKEND setting cannot be {http_backend}, the only "
+            "valid values are 'http', 'requests' or 'httpx'."
+        ) from exc
     return LatchSDK(core_class(settings.LATCH_APP_ID, settings.LATCH_SECRET_KEY))

@@ -10,7 +10,7 @@ import shutil
 
 import nox
 
-nox.options.default_venv_backend = "venv"
+nox.options.default_venv_backend = "uv|venv"
 nox.options.reuse_existing_virtualenvs = True
 
 IS_CI = bool(os.getenv("CI", False))
