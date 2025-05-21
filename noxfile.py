@@ -283,7 +283,7 @@ def lint_pylint(session):
 
     session.install("pylint", "pylint-django", "django-allauth", ".[tests]")
     session.run(os.path.join(session.bin, "python"), "-Im", "pylint", "--version")
-    os.environ["DJANGO_SETTINGS_MODULE"] = "tests.base_authentication.test_settings"
+    os.environ["DJANGO_SETTINGS_MODULE"] = "tests.settings"
     session.run(
         os.path.join(session.bin, "python"),
         "-Im",

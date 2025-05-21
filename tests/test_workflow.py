@@ -17,7 +17,7 @@ from latch_sdk.exceptions import TokenNotFound, ApplicationAlreadyPaired, LatchE
 from django_latch2.forms import PairLatchForm
 from django_latch2.models import LatchUserConfig
 
-from ..base import (
+from .base import (
     LoggedInTestCase,
     CreateLatchConfigMixin,
     mock_status_true,
@@ -43,12 +43,12 @@ class AnonymousUserTests(TestCase):
             with self.subTest(operation=operation):
                 resp = self.client.get(reverse(viewname))
                 self.assertRedirects(
-                    resp, reverse(settings.LOGIN_URL, query={"next": reverse(viewname)})
+                    resp, f"{settings.LOGIN_URL}?next={reverse(viewname)}"
                 )
 
                 resp = self.client.post(reverse(viewname), data=data)
                 self.assertRedirects(
-                    resp, reverse(settings.LOGIN_URL, query={"next": reverse(viewname)})
+                    resp, f"{settings.LOGIN_URL}?next={reverse(viewname)}"
                 )
 
     def test_access_view_decorator(self):
@@ -64,7 +64,7 @@ class AnonymousUserTests(TestCase):
             with self.subTest(decorator=decorator):
                 resp = self.client.get(reverse(viewname))
                 self.assertRedirects(
-                    resp, reverse(settings.LOGIN_URL, query={"next": reverse(viewname)})
+                    resp, f"{settings.LOGIN_URL}?next={reverse(viewname)}"
                 )
 
 

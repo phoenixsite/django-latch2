@@ -1,11 +1,10 @@
 """
-URLConf used for testing.
+URLConf used for testing the integration of django-latch2 with django-allauth.
 """
 
 # SPDX-License-Identifier: BSD-3-Clause
 
 from django.urls import path, include
-from django.contrib.auth.views import LoginView
 from django.views.generic import TemplateView
 
 from django_latch2.urls import urlpatterns as latch_urls
@@ -17,8 +16,11 @@ from .views import (
 )
 
 urlpatterns = [
-    path("accounts/", include("allauth.urls")),
-    path("accounts/login/", LoginView.as_view(), name="login"),
+    # path("accounts/", include(("allauth.account.urls", "allauth.account"))),
+    path(
+        "", TemplateView.as_view(template_name="django_latch2/home.html"), name="home"
+    ),
+    path("accounts/", include(("allauth.account.urls"))),
     path(
         "require-paired-view-instance",
         paired_user_required(

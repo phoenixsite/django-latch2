@@ -17,7 +17,10 @@ from .views import (
 )
 
 urlpatterns = [
-    path("accounts/login/", LoginView.as_view(), name="login"),
+    path(
+        "", TemplateView.as_view(template_name="django_latch2/home.html"), name="home"
+    ),
+    path("accounts/login/", LoginView.as_view(), name="account_login"),
     path(
         "require-paired-view-instance",
         paired_user_required(

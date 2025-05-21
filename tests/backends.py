@@ -9,7 +9,7 @@ from allauth.account.auth_backends import AuthenticationBackend
 from django_latch2.backends import LatchModelBackendMixin
 
 
-class LatchAuthenticationBackend(LatchModelBackendMixin, AuthenticationBackend):
+class LatchAuthenticationAllauthBackend(LatchModelBackendMixin, AuthenticationBackend):
     """
     ``django-allauth``'s backend with Latch integration.
     """

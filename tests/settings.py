@@ -1,5 +1,5 @@
 """
-Minimal Django settings for testing the Latch integration with ``django-allauth``.
+Minimal Django settings for testing.
 """
 
 # SPDX-License-Identifier: BSD-3-Clause
@@ -16,20 +16,21 @@ INSTALLED_APPS = (
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.sites",
+    # Though we don't need the django-allauth apps for
+    # the base authentication system, we need to set them up
+    # now to make sure the models are populated in the database
     "allauth",
     "allauth.account",
     "django_latch2",
-    "tests.all_authentication",
+    "tests",
 )
-ROOT_URLCONF = "tests.allauth_authentication.urls"
-LOGIN_URL = "login"
+ROOT_URLCONF = "tests.urls"
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory"}}
 MIDDLEWARE = (
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
 )
 SECRET_KEY = get_random_string(12)
 SITE_ID = 1
@@ -52,9 +53,7 @@ TEMPLATES = [
     }
 ]
 AUTHENTICATION_BACKENDS = [
-    "tests.allauth_authentication.backends.LatchAuthenticationBackend",
-    # "django.contrib.auth.backends.ModelBackend",
-    # "allauth.account.auth_backends.AuthenticationBackend",
+    "django_latch2.backends.LatchDefaultModelBackend",
 ]
 LATCH_APP_ID = "a" * 20
 LATCH_SECRET_KEY = "b" * 64
