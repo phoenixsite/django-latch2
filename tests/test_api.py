@@ -22,7 +22,7 @@ class HTTPBackendTestCases(TestCase):
         `latch_sdk.syncio.pure.Latch`.
         """
 
-        from django_latch2 import get_latch_api
+        from django_latch import get_latch_api
 
         latch_api = get_latch_api()
         from latch_sdk.syncio.pure import Latch
@@ -36,7 +36,7 @@ class HTTPBackendTestCases(TestCase):
         `latch_sdk.syncio.requests.Latch`.
         """
 
-        from django_latch2 import get_latch_api
+        from django_latch import get_latch_api
 
         latch_api = get_latch_api()
         from latch_sdk.syncio.requests import Latch
@@ -50,7 +50,7 @@ class HTTPBackendTestCases(TestCase):
         `latch_sdk.syncio.httpx.Latch`.
         """
 
-        from django_latch2 import get_latch_api
+        from django_latch import get_latch_api
 
         latch_api = get_latch_api()
         from latch_sdk.syncio.requests import Latch
@@ -69,6 +69,6 @@ class HTTPBackendTestCases(TestCase):
             "the only valid values are 'http', 'requests' or 'httpx'."
         )
         with self.assertRaisesMessage(ImproperlyConfigured, message):
-            from django_latch2 import get_latch_api
+            from django_latch import get_latch_api
 
             get_latch_api()

@@ -3,26 +3,26 @@
 Installation
 ============
 
-``django-latch2`` |release| supports Django 4.2, 5.1 and 5.2. See
+``django-latch`` |release| supports Django 4.2, 5.1 and 5.2. See
 `Django's Python support matrix <https://docs.djangoproject.com/en/dev/faq/install/#what-python-version-can-i-use-with-django>`_ for details of which Python versions are
 compatible with each version of Django.
 
 Installing from PyPI
 --------------------
 
-To install ``django-latch2``, run the following command from a command line:
+To install ``django-latch``, run the following command from a command line:
 
 .. tab:: Unix-based
 
     .. code-block:: shell
 
-        python -m pip install django-latch2
+        python -m pip install django-latch
 
 .. tab:: Windows
 
     .. code-block:: shell
 
-        py -m pip install django-latch2
+        py -m pip install django-latch
 
 This will install the latest supported version of Django, if you don't
 already have one.
@@ -34,7 +34,7 @@ Installing for local development
 --------------------------------
 
 If you want to contribute o modify any functionality, you can
-obtain the source code from the `project repository <https://github.com/phoenixsite/django-latch2>`_.
+obtain the source code from the `project repository <https://github.com/phoenixsite/django-latch>`_.
 You can fetch it using `git <https://git-scm.com/>`_ by typing::
 
-    git clone https://github.com/phoenixsite/django-latch2.git
+    git clone https://github.com/phoenixsite/django-latch.git

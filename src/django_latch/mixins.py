@@ -15,7 +15,7 @@ class UnpairedUserRequiredMixin(AccessMixin):
     """
     Verify that the current user is paired with the Latch service.
 
-    It has the same the behaviour as :func:`~django_latch2.decorators.unpaired_user_required`,
+    It has the same the behaviour as :func:`~django_latch.decorators.unpaired_user_required`,
     which is the following:
 
     * If the user isn't logged in, it redirects to :setting:`settings.LOGIN_URL <LOGIN_URL>`
@@ -28,7 +28,7 @@ class UnpairedUserRequiredMixin(AccessMixin):
 
     This mixin implies that the user must be logged in, so using
     :class:`~django.contrib.auth.mixins.LoginRequiredMixin` is not necessary when a
-    view inherit from :class:`~django_latch2.mixins.UnpairedUserRequiredMixin`.
+    view inherit from :class:`~django_latch.mixins.UnpairedUserRequiredMixin`.
     """
 
     @method_decorator(sensitive_post_parameters())
@@ -48,7 +48,7 @@ class PairedUserRequiredMixin(AccessMixin):
     Verify that the current user is not paired with the Latch service.
 
     It has the same the behaviour as
-    :func:`~django_latch2.decorators.paired_user_required`, which is the
+    :func:`~django_latch.decorators.paired_user_required`, which is the
     following:
 
     * If the user isn't logged in, it redirects to :setting:`settings.LOGIN_URL <LOGIN_URL>`
@@ -61,7 +61,7 @@ class PairedUserRequiredMixin(AccessMixin):
 
     This mixin implies that the user must be logged in, so using
     :class:`~django.contrib.auth.mixins.LoginRequiredMixin` is not necessary
-    when a view inherit from :class:`~django_latch2.mixins.PairedUserRequiredMixin`.
+    when a view inherit from :class:`~django_latch.mixins.PairedUserRequiredMixin`.
     """
 
     @method_decorator(sensitive_post_parameters())

@@ -14,8 +14,8 @@ from django.utils.crypto import get_random_string
 
 from latch_sdk.exceptions import TokenNotFound, ApplicationAlreadyPaired, LatchError
 
-from django_latch2.forms import PairLatchForm
-from django_latch2.models import LatchUserConfig
+from django_latch.forms import PairLatchForm
+from django_latch.models import LatchUserConfig
 
 from .base import (
     LoggedInTestCase,
@@ -37,8 +37,8 @@ class AnonymousUserTests(TestCase):
         """
 
         for operation, viewname, data in [
-            ("pair", "django_latch2_pair", {"token": "doesnotmattertoken"}),
-            ("unpair", "django_latch2_unpair", None),
+            ("pair", "django_latch_pair", {"token": "doesnotmattertoken"}),
+            ("unpair", "django_latch_unpair", None),
         ]:
             with self.subTest(operation=operation):
                 resp = self.client.get(reverse(viewname))
@@ -104,9 +104,9 @@ class UnpairedUserTests(LoggedInTestCase):
         template and populates the pairing form into the context.
         """
 
-        resp = self.client.get(reverse("django_latch2_pair"))
+        resp = self.client.get(reverse("django_latch_pair"))
         self.assertEqual(resp.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(resp, "django_latch2/pair_account_form.html")
+        self.assertTemplateUsed(resp, "django_latch/pair_account_form.html")
         self.assertIsInstance(resp.context["form"], PairLatchForm)
 
     def test_unpairing(self):
@@ -114,7 +114,7 @@ class UnpairedUserTests(LoggedInTestCase):
         An unpaired user should not be able to access the unpair view.
         """
 
-        resp = self.client.get(reverse("django_latch2_unpair"))
+        resp = self.client.get(reverse("django_latch_unpair"))
         self.assertEqual(resp.status_code, HTTPStatus.FORBIDDEN)
 
     @patch(
@@ -124,7 +124,7 @@ class UnpairedUserTests(LoggedInTestCase):
     def test_token_not_found(self):
         """Pair with an invalid token."""
         resp = self.client.post(
-            reverse("django_latch2_pair"), data={"token": "invalid token"}
+            reverse("django_latch_pair"), data={"token": "invalid token"}
         )
         self.assertEqual(resp.status_code, HTTPStatus.OK)
         self.assertFormError(
@@ -146,7 +146,7 @@ class UnpairedUserTests(LoggedInTestCase):
         """
 
         resp = self.client.post(
-            reverse("django_latch2_pair"), data={"token": "invalid token"}
+            reverse("django_latch_pair"), data={"token": "invalid token"}
         )
         self.assertEqual(resp.status_code, HTTPStatus.OK)
         self.assertFormError(
@@ -159,7 +159,7 @@ class UnpairedUserTests(LoggedInTestCase):
     def test_no_pairing_on_get(self):
         """Pairing only occurs on HTTP ``POST``, not ``GET``."""
         resp = self.client.get(
-            reverse("django_latch2_pair"), data={"token": "valid token"}
+            reverse("django_latch_pair"), data={"token": "valid token"}
         )
         self.assertEqual(resp.status_code, HTTPStatus.OK)
         self.assertFalse(LatchUserConfig.objects.filter(user=self.user).exists())
@@ -171,9 +171,9 @@ class UnpairedUserTests(LoggedInTestCase):
         """
 
         resp = self.client.post(
-            reverse("django_latch2_pair"), data={"token": "valid token"}
+            reverse("django_latch_pair"), data={"token": "valid token"}
         )
-        self.assertRedirects(resp, reverse("django_latch2_pair_complete"))
+        self.assertRedirects(resp, reverse("django_latch_pair_complete"))
 
     @patch("latch_sdk.syncio.LatchSDK.account_pair", new=Mock(return_value=ACCOUNT_ID1))
     def test_pairing_success_is_paired(self):
@@ -182,9 +182,9 @@ class UnpairedUserTests(LoggedInTestCase):
         """
 
         resp = self.client.post(
-            reverse("django_latch2_pair"), data={"token": "valid token"}
+            reverse("django_latch_pair"), data={"token": "valid token"}
         )
-        self.assertRedirects(resp, reverse("django_latch2_pair_complete"))
+        self.assertRedirects(resp, reverse("django_latch_pair_complete"))
         self.assertTrue(LatchUserConfig.objects.filter(user=self.user).exists())
         latch_config = LatchUserConfig.objects.get(user=self.user)
         self.assertEqual(latch_config.account_id, ACCOUNT_ID1)
@@ -201,9 +201,7 @@ class UnpairedUserTests(LoggedInTestCase):
             with self.subTest(decorator_type=deco_type):
                 resp = self.client.get(reverse(viewname))
                 self.assertEqual(resp.status_code, HTTPStatus.OK)
-                self.assertTemplateUsed(
-                    resp, "django_latch2/require_unpaired_user.html"
-                )
+                self.assertTemplateUsed(resp, "django_latch/require_unpaired_user.html")
 
     def test_paired_user_required_decorator(self):
         """
@@ -256,7 +254,7 @@ class PairedUserTests(CreateLatchConfigMixin, LoggedInTestCase):
         An already paired user should not be able to access the pair view.
         """
 
-        resp = self.client.get(reverse("django_latch2_pair"))
+        resp = self.client.get(reverse("django_latch_pair"))
         self.assertEqual(resp.status_code, HTTPStatus.FORBIDDEN)
 
     @patch(
@@ -269,9 +267,9 @@ class PairedUserTests(CreateLatchConfigMixin, LoggedInTestCase):
         template.
         """
 
-        resp = self.client.get(reverse("django_latch2_unpair"))
+        resp = self.client.get(reverse("django_latch_unpair"))
         self.assertEqual(resp.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(resp, "django_latch2/unpair_account.html")
+        self.assertTemplateUsed(resp, "django_latch/unpair_account.html")
 
     @patch(
         "latch_sdk.syncio.LatchSDK.account_status",
@@ -282,7 +280,7 @@ class PairedUserTests(CreateLatchConfigMixin, LoggedInTestCase):
         Unpairing only occurs on HTTP ``POST``, not ``GET``.
         """
 
-        resp = self.client.get(reverse("django_latch2_unpair"))
+        resp = self.client.get(reverse("django_latch_unpair"))
         self.assertEqual(resp.status_code, HTTPStatus.OK)
         self.assertTrue(LatchUserConfig.objects.filter(user=self.user).exists())
 
@@ -296,8 +294,8 @@ class PairedUserTests(CreateLatchConfigMixin, LoggedInTestCase):
         Valid unpairing sets the user as unpaired.
         """
 
-        resp = self.client.post(reverse("django_latch2_unpair"))
-        self.assertRedirects(resp, reverse("django_latch2_unpair_complete"))
+        resp = self.client.post(reverse("django_latch_unpair"))
+        self.assertRedirects(resp, reverse("django_latch_unpair_complete"))
         self.assertFalse(LatchUserConfig.objects.filter(user=self.user).exists())
 
     @patch(
@@ -316,7 +314,7 @@ class PairedUserTests(CreateLatchConfigMixin, LoggedInTestCase):
             with self.subTest(decorator_type=deco_type):
                 resp = self.client.get(reverse(viewname))
                 self.assertEqual(resp.status_code, HTTPStatus.OK)
-                self.assertTemplateUsed(resp, "django_latch2/require_paired_user.html")
+                self.assertTemplateUsed(resp, "django_latch/require_paired_user.html")
 
     @patch(
         "latch_sdk.syncio.LatchSDK.account_status",
@@ -347,7 +345,7 @@ class PairedUserTests(CreateLatchConfigMixin, LoggedInTestCase):
     )
     def test_unpairing_failure(self):
         """Error during unpairing."""
-        resp = self.client.post(reverse("django_latch2_unpair"))
+        resp = self.client.post(reverse("django_latch_unpair"))
         self.assertEqual(resp.status_code, HTTPStatus.OK)
         self.assertIn("unpair_error", resp.context)
         self.assertIn("message", resp.context["unpair_error"])

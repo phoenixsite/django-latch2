@@ -33,7 +33,7 @@ def paired_user_required(function=None):
     Decorator for views that checks that the authenticated user is paired with
     the Latch service.
 
-    It has the same the behaviour as :class:`~django_latch2.mixins.PairedUserRequiredMixin`,
+    It has the same the behaviour as :class:`~django_latch.mixins.PairedUserRequiredMixin`,
     which is the following:
 
     * If the user isn't logged in, it redirects to :setting:`settings.LOGIN_URL <LOGIN_URL>`
@@ -46,7 +46,7 @@ def paired_user_required(function=None):
 
     This decorator implies that a user must be logged in, so using
     :func:`~django.contrib.auth.decorators.login_required` is not necessary
-    when :func:`~django_latch2.decorators.paired_user_required` is present.
+    when :func:`~django_latch.decorators.paired_user_required` is present.
     """
 
     actual_decorator = user_passes_test(
@@ -62,7 +62,7 @@ def unpaired_user_required(function=None):
     Decorator for views that checks that the authenticated user is not
     paired with the Latch service.
 
-    It has the same the behaviour as :class:`~django_latch2.mixins.UnpairedUserRequiredMixin`,
+    It has the same the behaviour as :class:`~django_latch.mixins.UnpairedUserRequiredMixin`,
     which is the following:
 
     * If the user isn't logged in, it redirects to :setting:`settings.LOGIN_URL <LOGIN_URL>`
@@ -75,7 +75,7 @@ def unpaired_user_required(function=None):
 
     This decorator implies that a user must be logged in, so using
     :func:`~django.contrib.auth.decorators.login_required` is not necessary
-    when :func:`~django_latch2.decorators.unpaired_user_required` is present.
+    when :func:`~django_latch.decorators.unpaired_user_required` is present.
     """
 
     def not_paired(user):

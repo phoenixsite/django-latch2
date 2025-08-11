@@ -340,7 +340,7 @@ wheels = [
 ]
 
 [[package]]
-name = "django-latch2"
+name = "django-latch"
 version = "5.2.0"
 source = { editable = "." }
 dependencies = [

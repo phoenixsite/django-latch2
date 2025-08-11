@@ -9,7 +9,7 @@ from django.test import TestCase
 from django.core.exceptions import PermissionDenied
 from django.utils.crypto import get_random_string
 
-from django_latch2.backends import can_pass_latch, LatchDefaultModelBackend
+from django_latch.backends import can_pass_latch, LatchDefaultModelBackend
 
 from .base import CreateLatchConfigMixin, mock_status_true, mock_status_false
 

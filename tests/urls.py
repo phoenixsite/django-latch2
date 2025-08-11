@@ -8,8 +8,8 @@ from django.urls import path
 from django.contrib.auth.views import LoginView
 from django.views.generic import TemplateView
 
-from django_latch2.urls import urlpatterns as latch_urls
-from django_latch2.decorators import paired_user_required, unpaired_user_required
+from django_latch.urls import urlpatterns as latch_urls
+from django_latch.decorators import paired_user_required, unpaired_user_required
 
 from .views import (
     RequirePairedUserWithClassDecoratorView,
@@ -17,14 +17,12 @@ from .views import (
 )
 
 urlpatterns = [
-    path(
-        "", TemplateView.as_view(template_name="django_latch2/home.html"), name="home"
-    ),
+    path("", TemplateView.as_view(template_name="django_latch/home.html"), name="home"),
     path("accounts/login/", LoginView.as_view(), name="account_login"),
     path(
         "require-paired-view-instance",
         paired_user_required(
-            TemplateView.as_view(template_name="django_latch2/require_paired_user.html")
+            TemplateView.as_view(template_name="django_latch/require_paired_user.html")
         ),
         name="require_paired_view_instance",
     ),
@@ -32,7 +30,7 @@ urlpatterns = [
         "require-unpaired-view-instance",
         unpaired_user_required(
             TemplateView.as_view(
-                template_name="django_latch2/require_unpaired_user.html"
+                template_name="django_latch/require_unpaired_user.html"
             )
         ),
         name="require_unpaired_view_instance",

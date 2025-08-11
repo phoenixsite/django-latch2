@@ -15,7 +15,7 @@ This new version most likely have breaking changes.
 
 **Version support:**
 
-* ``django-latch2`` now supports Django 4.2, 5.1 and 5.2. See
+* ``django-latch`` now supports Django 4.2, 5.1 and 5.2. See
   `Django's Python support matrix <https://docs.djangoproject.com/en/dev/faq/install/#what-python-version-can-i-use-with-django>`_
   for details of which Python versions are compatible with each version of
   Django.
@@ -24,22 +24,22 @@ This new version most likely have breaking changes.
 **New features:**
 
 * Added checks for the `Django's check command <https://docs.djangoproject.com/en/5.2/topics/checks/>`_.
-* Added :func:`django_latch2.decorators.unpaired_user_required` view decorator.
-* Added :class:`django_latch2.mixins.UnpairedUserRequiredMixin` and :class:`django_latch2.mixins.PairedUserRequiredMixin`
+* Added :func:`django_latch.decorators.unpaired_user_required` view decorator.
+* Added :class:`django_latch.mixins.UnpairedUserRequiredMixin` and :class:`django_latch.mixins.PairedUserRequiredMixin`
   class-based views mixins.
-* Added authentication backend mixin :class:`django_latch2.backends.LatchModelBackendMixin`.
+* Added authentication backend mixin :class:`django_latch.backends.LatchModelBackendMixin`.
 
 **Changes:**
 
-* ``latch.views.latch_is_configured`` view decorator is now :func:`django_latch2.decorators.paired_user_required`.
-* ``latch.views.pair`` function-based view is now :class:`django_latch2.views.PairLatchView` class-based view.
-* ``latch.views.unpair`` function-based view is now :class:`django_latch2.views.UnpairLatchView` class-based view.
-* Removed ``latch.models.UserProfile``. Now the user's account id is in :class:`django_latch2.models.LatchUserConfig`.
+* ``latch.views.latch_is_configured`` view decorator is now :func:`django_latch.decorators.paired_user_required`.
+* ``latch.views.pair`` function-based view is now :class:`django_latch.views.PairLatchView` class-based view.
+* ``latch.views.unpair`` function-based view is now :class:`django_latch.views.UnpairLatchView` class-based view.
+* Removed ``latch.models.UserProfile``. Now the user's account id is in :class:`django_latch.models.LatchUserConfig`.
 * The test suite was restructured.
 * The included URLconf now has URLs to inform success on pairing and unpairing operations.
 * The default authentication backend with Latch support (previously ``latch.auth_backend.LatchAuthBackend``,
-  now :class:`django_latch2.backends.LatchDefaultModelBackend`) now inherit directly from :class:`~django.contrib.auth.backends.ModelBackend`.
-* ``latch.forms.LatchPairForm`` is now :class:`django_latch2.forms.PairLatchForm`.
+  now :class:`django_latch.backends.LatchDefaultModelBackend`) now inherit directly from :class:`~django.contrib.auth.backends.ModelBackend`.
+* ``latch.forms.LatchPairForm`` is now :class:`django_latch.forms.PairLatchForm`.
 
 **Removals:**
 

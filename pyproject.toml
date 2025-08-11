@@ -1,5 +1,5 @@
 [project]
-name = "django-latch2"
+name = "django-latch"
 version = "5.2.0"
 authors = [
   { name = "Javier Olascoaga", email = "jolascoaga@rootedcon.es"},
@@ -40,9 +40,9 @@ requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
 [project.urls]
-Documentation = "https://django-latch2.readthedocs.io"
-Source = "https://github.com/phoenixsite/django-latch2"
-Changelog = "https://django-latch2.readthedocs.io/en/stable/changelog.html"
+Documentation = "https://django-latch.readthedocs.io"
+Source = "https://github.com/phoenixsite/django-latch"
+Changelog = "https://django-latch.readthedocs.io/en/stable/changelog.html"
 
 [project.optional-dependencies]
 requests = ["requests"]
@@ -88,11 +88,11 @@ fail_under = 95
 [tool.coverage.run]
 branch = true
 parallel = true
-source = ["django-latch2"]
+source = ["django-latch"]
 
 [tool.interrogate]
 exclude = [
-  "src/django_latch2/migrations",
+  "src/django_latch/migrations",
 ]
 fail-under = 100
 ignore-init-module = true

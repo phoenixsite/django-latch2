@@ -3,7 +3,7 @@
 Quick start
 ===========
 
-First, you'll need to install django-latch2. If you haven't already done it,
+First, you'll need to install django-latch. If you haven't already done it,
 see :ref:`the installation options <install>`.
 
 .. _obtain_credentials:
@@ -24,9 +24,9 @@ Once you have the Latch application's credentials, you'll need to
 configure your Django project. The modifications on your `settings module
 <https://docs.djangoproject.com/en/5.2/topics/settings/>`_ are:
 
-1. Add ``"django_latch2"`` to the :data:`~django.conf.settings.INSTALLED_APPS` list.
+1. Add ``"django_latch"`` to the :data:`~django.conf.settings.INSTALLED_APPS` list.
 2. Include the settings ``LATCH_APP_ID`` and ``LATCH_SECRET_KEY``.
-3. Add a subclass of :class:`~django_latch2.backends.LatchModelBackendMixin` to the :data:`~django:conf.settings.AUTHENTICATION_BACKENDS` list.
+3. Add a subclass of :class:`~django_latch.backends.LatchModelBackendMixin` to the :data:`~django:conf.settings.AUTHENTICATION_BACKENDS` list.
 
 Apart from these changes on the `settings module <https://docs.djangoproject.com/en/5.2/topics/settings/>`_,
 you also have to :ref:`create some templates <create-templates>` and :ref:`set up some
@@ -35,10 +35,10 @@ URLs <set-up-urls>`.
 Latch credentials
 ~~~~~~~~~~~~~~~~~
 
-In order to connect the Django application to the Latch API, ``django-latch2``
+In order to connect the Django application to the Latch API, ``django-latch``
 need the two parameters obtained in the :ref:`step for creating an application in
 the Latch site <obtain_credentials>`; that is, the application id and its secret
-key. ``django-latch2`` get these settings from the `settings module <https://docs.djangoproject.com/en/5.2/topics/settings/>`_
+key. ``django-latch`` get these settings from the `settings module <https://docs.djangoproject.com/en/5.2/topics/settings/>`_
 from the attributes ``LATCH_APP_ID`` and ``LATCH_SECRET_KEY``.
 
 To set these two parameters, I recommend you using environment variables or a remote
@@ -112,22 +112,22 @@ to modify your authentication backends.
 If you are using the `Django's default authentication process <https://docs.djangoproject.com/en/5.2/topics/auth/default/>`_,
 then you must substitute, or add if it is not specified in your settings
 module, the :class:`~django.contrib.auth.backends.ModelBackend`
-for :class:`~django_latch2.backends.LatchDefaultModelBackend` in
+for :class:`~django_latch.backends.LatchDefaultModelBackend` in
 the :setting:`AUTHENTICATION_BACKENDS` list:
 
 .. code-block:: python
 
-    AUTHENTICATION_BACKENDS = ["django_latch2.backends.LatchDefaultModelBackend"]
+    AUTHENTICATION_BACKENDS = ["django_latch.backends.LatchDefaultModelBackend"]
 
 If you have implemented a custom authentication process which uses a different authentication backend,
-you can also add to it the Latch check by creating an inherited class from the :class:`~django_latch2.backends.LatchModelBackendMixin`
+you can also add to it the Latch check by creating an inherited class from the :class:`~django_latch.backends.LatchModelBackendMixin`
 and your custom backend:
 
 .. code-block:: python
 
     from django.contrib.auth.backends import BaseBackend
 
-    from django_latch2.backend.LatchModelBackendMixin
+    from django_latch.backend.LatchModelBackendMixin
 
     # Your custom backend
     class YourCustomAuthBackend(BaseBackend):
@@ -136,13 +136,13 @@ and your custom backend:
     class LatchYourCustomAuthBackend(LatchModelBackendMixin, YourCustomBackend):
         pass
 
-or simply by inheriting directly from :class:`~django_latch2.backends.LatchModelBackendMixin`:
+or simply by inheriting directly from :class:`~django_latch.backends.LatchModelBackendMixin`:
 
 .. code-block:: python
 
     from django.contrib.auth.backends import BaseBackend
 
-    from django_latch2.backend.LatchModelBackendMixin
+    from django_latch.backend.LatchModelBackendMixin
 
     # Your custom backend
     class LatchYourCustomAuthBackend(LatchModelBackendMixin, BaseBackend):
@@ -158,7 +158,7 @@ Then, it must be added to your settings module:
 .. important:: **Using more than one authentication backend**
 
     In order to block or allow all the requested attempts from authenticated users, the authentication backend
-    that is subclass of :class:`~django_latch2.backends.LatchModelBackendMixin` must be the first one
+    that is subclass of :class:`~django_latch.backends.LatchModelBackendMixin` must be the first one
     in the :setting:`AUTHENTICATION_BACKENDS` list.
 
 In case your are using a `remote authentication service <https://docs.djangoproject.com/en/5.2/howto/auth-remote-user/>`_
@@ -172,7 +172,7 @@ about using backends.
 Setting up URLs
 ---------------
 
-``django-latch2`` includes a Django URLconf that sets up URL patterns for
+``django-latch`` includes a Django URLconf that sets up URL patterns for
 the :ref:`required views <views>`. For example, the URLs can be placed under
 the prefix ``/accounts/`` by adding the following to your project's root
 URLconf:
@@ -183,7 +183,7 @@ URLconf:
 
     urlpatterns = [
         ...
-        path("accounts/", include("django_latch2.urls")),
+        path("accounts/", include("django_latch.urls")),
         ...
     ]
 
@@ -192,22 +192,22 @@ latch by visiting the URLs ``/accounts/pair-latch/`` and
 ``/accounts/unpair-latch/``.
 
 The following `URL names <https://docs.djangoproject.com/en/5.2/topics/http/urls/#reverse-resolution-of-urls>`_
-are defined in ``django_latch2.urls``:
+are defined in ``django_latch.urls``:
 
-* ``django_latch2_pair`` is the view for pairing the authenticated user's latch.
-* ``django_latch2_pair_complete`` is the post-pairing success view.
-* ``django_latch2_unpair`` is the view for unpairing the authenticated user's latch.
-* ``django_latch2_unpair_complete`` is the post-unpairing success view.
+* ``django_latch_pair`` is the view for pairing the authenticated user's latch.
+* ``django_latch_pair_complete`` is the post-pairing success view.
+* ``django_latch_unpair`` is the view for unpairing the authenticated user's latch.
+* ``django_latch_unpair_complete`` is the post-unpairing success view.
 
 .. _create-templates:
 
 Create the required templates
 -----------------------------
 
-Lastly, you also need to create some templates required by the ``django-latch2`` views.
+Lastly, you also need to create some templates required by the ``django-latch`` views.
 The required templates are the following:
 
-``django_latch2/pair_account_form.html``
+``django_latch/pair_account_form.html``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Used to show the pairing form. It has the following context:
@@ -217,14 +217,14 @@ Used to show the pairing form. It has the following context:
     generated on the Latch mobile app.
 
 
-``django_latch2/pair_complete.html``
+``django_latch/pair_complete.html``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Used after successfully paired the authenticated user with the Latch service.
 It should inform the user that it can now block or allow the access to the
 Django application by using the Latch mobile app.
 
-``django_latch2/unpair_account.html``
+``django_latch/unpair_account.html``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Used to ask the user for confirming that it really wants to unpair its latch. It has
@@ -236,7 +236,7 @@ the following context:
     a :class:`dict` with information about the error: a message (``'message'``), an error code
     (``'code'``) and extra parameters (``'params'``).
 
-``django_latch2/unpair_complete.html``
+``django_latch/unpair_complete.html``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Used after successfully unpaired the authenticated user with Latch. It should

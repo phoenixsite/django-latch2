@@ -4,7 +4,7 @@
 Settings
 ========
 
-In order to start using ``django-latch2`` in your Django project, you need
+In order to start using ``django-latch`` in your Django project, you need
 to set up some settings in your `settings module <https://docs.djangoproject.com/en/5.2/topics/settings/>`_.
 Other settings are optional and their default value may be enough for your
 needs, but it is also recommended reading what those are about.
@@ -53,13 +53,13 @@ Optional settings
 
         .. code-block:: shell
 
-            python -m pip install django-latch2[requests]
+            python -m pip install django-latch[requests]
 
     .. tab:: Windows
 
         .. code-block:: shell
 
-            py -m pip install django-latch2[requests]
+            py -m pip install django-latch[requests]
 
 
     Then, `latch_sdk_python <https://github.com/Telefonica/latch-sdk-python>`_
@@ -71,13 +71,13 @@ Optional settings
 
         .. code-block:: shell
 
-            python -m pip install django-latch2[httpx]
+            python -m pip install django-latch[httpx]
 
     .. tab:: Windows
 
         .. code-block:: shell
 
-            py -m pip install django-latch2[httpx]
+            py -m pip install django-latch[httpx]
 
     Then, `latch_sdk_python <https://github.com/Telefonica/latch-sdk-python>`_
     will use `httpx.Client <https://www.python-httpx.org/api/#client>`_.

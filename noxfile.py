@@ -14,7 +14,7 @@ nox.options.default_venv_backend = "uv|venv"
 nox.options.reuse_existing_virtualenvs = True
 
 IS_CI = bool(os.getenv("CI", False))
-PACKAGE_NAME = "django_latch2"
+PACKAGE_NAME = "django_latch"
 
 NOXFILE_PATH = pathlib.Path(__file__).parents[0]
 ARTIFACT_PATHS = (
@@ -68,7 +68,7 @@ def tests_with_coverage(session, django):
     session.install(
         f"Django~={django}.0",
         ".[tests,requests,httpx]",
-        "django-allauth",
+        "./django-allauth",
         "coverage",
         'tomli; python_full_version < "3.11.0a7"',
     )
@@ -100,7 +100,7 @@ def tests_with_coverage(session, django):
 @nox.session(python=["3.13"], tags=["tests"])
 def coverage_report(session):
     """
-    Combine coverage from the various test runs and output the report.
+    Combine coverage from the test runs and output the report.
     """
 
     # In CI this job does not run because we substitute one that integrates with the CI

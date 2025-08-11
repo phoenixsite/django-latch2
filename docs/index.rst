@@ -1,9 +1,9 @@
 .. _index:
 
-django-latch2 |release|
+django-latch |release|
 =======================
 
-.. important:: **django-latch2 is still under development**
+.. important:: **django-latch is still under development**
 
     Though it may seem already suitable for deployment environments, it
     relies on the `latch_sdk_python <https://github.com/Telefonica/latch-sdk-python>`_,

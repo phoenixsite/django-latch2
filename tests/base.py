@@ -16,7 +16,7 @@ from django.test import TestCase
 
 from latch_sdk.models import Status
 
-from django_latch2.models import LatchUserConfig
+from django_latch.models import LatchUserConfig
 
 ACCOUNT_ID = "a" * 64
 

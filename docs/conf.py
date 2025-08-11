@@ -13,17 +13,17 @@ settings.configure(
     INSTALLED_APPS=[
         "django.contrib.auth",
         "django.contrib.contenttypes",
-        "django_latch2",
+        "django_latch",
     ],
     DEBUG=True,
 )
 
 django.setup()
 
-project = "django-latch2"
+project = "django-latch"
 copyright = "Carlos Romero Cruz and contributors"
 author = "Carlos Romero Cruz"
-version = get_version("django_latch2")
+version = get_version("django_latch")
 release = version
 extensions = [
     "sphinx.ext.autodoc",
@@ -67,7 +67,7 @@ spelling_ignore_contributor_names = False
 
 # OGP metadata configuration.
 ogp_enable_meta_description = True
-ogp_site_url = "https://django-latch2.readthedocs.io/"
+ogp_site_url = "https://django-latch.readthedocs.io/"
 
 # Django settings for sphinxcontrib-django.
 sys.path.insert(0, os.path.abspath("."))

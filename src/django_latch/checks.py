@@ -1,5 +1,5 @@
 """
-Checks for django-latch2.
+Checks for django-latch.
 """
 
 # SPDX-License-Identifier: BSD-3-Clause
@@ -44,10 +44,10 @@ def _contains_subclass(class_path, candidate_paths):
 
 def check_dependencies(app_configs, **kwargs):  # pylint: disable=unused-argument
     """
-    Check that the django-latch2's dependencies are installed in the project.
+    Check that the django-latch's dependencies are installed in the project.
     """
 
-    if not apps.is_installed("django_latch2"):
+    if not apps.is_installed("django_latch"):
         return []
 
     errors = []
@@ -62,8 +62,8 @@ def check_dependencies(app_configs, **kwargs):  # pylint: disable=unused-argumen
             errors.append(
                 checks.Error(
                     f"'{app_name}' must be in INSTALLED_APPS in order to use the "
-                    "django_latch2 application.",
-                    id=f"django_latch2.E{error_code}",
+                    "django_latch application.",
+                    id=f"django_latch.E{error_code}",
                 )
             )
 
@@ -74,22 +74,22 @@ def check_dependencies(app_configs, **kwargs):  # pylint: disable=unused-argumen
         errors.append(
             checks.Error(
                 "'django.contrib.auth.middleware.AuthenticationMiddleware' must "
-                "be in MIDDLEWARE in order to use the django_latch2 application.",
-                id="django_latch2.E103",
+                "be in MIDDLEWARE in order to use the django_latch application.",
+                id="django_latch.E103",
             )
         )
 
     # Check for the authentication backend
     if not _contains_subclass(
-        "django_latch2.backends.LatchModelBackendMixin",
+        "django_latch.backends.LatchModelBackendMixin",
         settings.AUTHENTICATION_BACKENDS,
     ):
         errors.append(
             checks.Error(
-                "'django_latch2.backends.LatchModelBackendMixin' must be a subclass of "
+                "'django_latch.backends.LatchModelBackendMixin' must be a subclass of "
                 "some in AUTHENTICATION_BACKENDS in order to use the "
-                "django_latch2 application.",
-                id="django_latch2.E104",
+                "django_latch application.",
+                id="django_latch.E104",
             )
         )
     return errors
@@ -114,8 +114,8 @@ def check_settings(app_configs, **kwargs):  # pylint: disable=unused-argument
             errors.append(
                 checks.Error(
                     f"'{setting_name}' must be included in settings in order to "
-                    "use the django_latch2 application.",
-                    id=f"django_latch2.E{error_code}",
+                    "use the django_latch application.",
+                    id=f"django_latch.E{error_code}",
                 )
             )
     return errors

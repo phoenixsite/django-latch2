@@ -1,11 +1,11 @@
 .. _models:
-.. module:: django_latch2.models
+.. module:: django_latch.models
 
 Model classes
 =============
 
 In order to be able to associate every user who has configured the latch with
-the Latch service and check its status (on or off), ``django-latch2`` has to
+the Latch service and check its status (on or off), ``django-latch`` has to
 store the parameter that uniquely identify a user against the Latch service:
 an account id.
 

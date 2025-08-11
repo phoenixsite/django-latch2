@@ -7,7 +7,7 @@ View classes to test the funtions decorators.
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
-from django_latch2.decorators import paired_user_required, unpaired_user_required
+from django_latch.decorators import paired_user_required, unpaired_user_required
 
 
 @method_decorator(paired_user_required, name="dispatch")
@@ -17,7 +17,7 @@ class RequirePairedUserWithClassDecoratorView(TemplateView):
     decorator.
     """
 
-    template_name = "django_latch2/require_paired_user.html"
+    template_name = "django_latch/require_paired_user.html"
 
 
 @method_decorator(unpaired_user_required, name="dispatch")
@@ -27,4 +27,4 @@ class RequireUnPairedUserWithMethodDecoratorView(TemplateView):
     decorator.
     """
 
-    template_name = "django_latch2/require_unpaired_user.html"
+    template_name = "django_latch/require_unpaired_user.html"

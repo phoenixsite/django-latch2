@@ -6,7 +6,7 @@ Custom backend based on the provided by ``django-allauth``.
 
 from allauth.account.auth_backends import AuthenticationBackend
 
-from django_latch2.backends import LatchModelBackendMixin
+from django_latch.backends import LatchModelBackendMixin
 
 
 class LatchAuthenticationAllauthBackend(LatchModelBackendMixin, AuthenticationBackend):

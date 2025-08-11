@@ -21,8 +21,8 @@ class LatchSettingsCheckTest(SimpleTestCase):
         """
 
         message = (
-            "(django_latch2.E105) 'LATCH_APP_ID' must be included in settings in order to "
-            "use the django_latch2 application."
+            "(django_latch.E105) 'LATCH_APP_ID' must be included in settings in order to "
+            "use the django_latch application."
         )
         with self.assertRaisesMessage(SystemCheckError, message):
             call_command("check")
@@ -34,8 +34,8 @@ class LatchSettingsCheckTest(SimpleTestCase):
         """
 
         message = (
-            "(django_latch2.E106) 'LATCH_SECRET_KEY' must be included in settings in order to "
-            "use the django_latch2 application."
+            "(django_latch.E106) 'LATCH_SECRET_KEY' must be included in settings in order to "
+            "use the django_latch application."
         )
         with self.assertRaisesMessage(SystemCheckError, message):
             call_command("check")
@@ -44,16 +44,16 @@ class LatchSettingsCheckTest(SimpleTestCase):
 class DependenciesCheckTest(SimpleTestCase):
     """Tests for dependecy checks."""
 
-    @modify_settings(INSTALLED_APPS={"remove": "django_latch2"})
+    @modify_settings(INSTALLED_APPS={"remove": "django_latch"})
     def test_app_not_installed(self):
         """
         The checking framework mut not return any error if
-        django_latch2 is not included in INSTALLED_APPS.
+        django_latch is not included in INSTALLED_APPS.
         """
 
         stderr = StringIO()
         call_command("check", stderr=stderr)
-        message = "django_latch2."
+        message = "django_latch."
         self.assertNotIn(message, stderr.getvalue())
 
     @modify_settings(INSTALLED_APPS={"remove": "django.contrib.contenttypes"})
@@ -63,8 +63,8 @@ class DependenciesCheckTest(SimpleTestCase):
         """
 
         message = (
-            "(django_latch2.E101) 'django.contrib.contenttypes' must be in "
-            "INSTALLED_APPS in order to use the django_latch2 application."
+            "(django_latch.E101) 'django.contrib.contenttypes' must be in "
+            "INSTALLED_APPS in order to use the django_latch application."
         )
         with self.assertRaisesMessage(SystemCheckError, message):
             call_command("check")
@@ -78,8 +78,8 @@ class DependenciesCheckTest(SimpleTestCase):
     #    """
     #
     #    message = (
-    #        "(django_latch2.E102) 'django.contrib.auth' must be in INSTALLED_APPS "
-    #        "in order to use the django_latch2 application."
+    #        "(django_latch.E102) 'django.contrib.auth' must be in INSTALLED_APPS "
+    #        "in order to use the django_latch application."
     #    )
     #    with self.assertRaises(KeyError):
     #    #with self.assertRaisesMessage(SystemCheckError, message):
@@ -96,8 +96,8 @@ class DependenciesCheckTest(SimpleTestCase):
         """
 
         message = (
-            "(django_latch2.E103) 'django.contrib.auth.middleware.AuthenticationMiddleware' must "
-            "be in MIDDLEWARE in order to use the django_latch2 application."
+            "(django_latch.E103) 'django.contrib.auth.middleware.AuthenticationMiddleware' must "
+            "be in MIDDLEWARE in order to use the django_latch application."
         )
         with self.assertRaisesMessage(SystemCheckError, message):
             call_command("check")
@@ -111,9 +111,9 @@ class DependenciesCheckTest(SimpleTestCase):
         """
 
         message = (
-            "(django_latch2.E104) 'django_latch2.backends.LatchModelBackendMixin' must "
+            "(django_latch.E104) 'django_latch.backends.LatchModelBackendMixin' must "
             "be a subclass of some in AUTHENTICATION_BACKENDS in order to use the "
-            "django_latch2 application."
+            "django_latch application."
         )
         with self.assertRaisesMessage(SystemCheckError, message):
             call_command("check")

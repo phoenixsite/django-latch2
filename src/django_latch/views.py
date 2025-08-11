@@ -23,7 +23,7 @@ class PairLatchView(UnpairedUserRequiredMixin, FormView):
     """
     Implement the pairing operation for an authenticated and unpaired user.
 
-    It is a subclass of :class:`~django_latch2.mixins.UnpairedUserRequiredMixin`,
+    It is a subclass of :class:`~django_latch.mixins.UnpairedUserRequiredMixin`,
     so only authenticated users without the latch configured can access it.
 
     .. automethod:: form_valid
@@ -33,17 +33,17 @@ class PairLatchView(UnpairedUserRequiredMixin, FormView):
     ALREADY_PAIRED_MESSAGE = _("Your account is already paired.")
 
     form_class = PairLatchForm
-    template_name = "django_latch2/pair_account_form.html"
-    success_url = reverse_lazy("django_latch2_pair_complete")
+    template_name = "django_latch/pair_account_form.html"
+    success_url = reverse_lazy("django_latch_pair_complete")
 
     def form_valid(self, form):
         """
         If the form is valid, attempt to pair the user account to the Latch service
-        and redirect to the success URL. If a :class:`django_latch2:exceptions.PairingLatchError`
+        and redirect to the success URL. If a :class:`django_latch:exceptions.PairingLatchError`
         is raised, instead re-render the form and include information about the error in the
         template context.
 
-        :param django_latch2.forms.PairLatchForm form: The token form to use.
+        :param django_latch.forms.PairLatchForm form: The token form to use.
         """
 
         form.pair_account(self.request.user)
@@ -54,7 +54,7 @@ class UnpairLatchView(PairedUserRequiredMixin, TemplateView):
     """
     Implement the unpairing operation for a authenticated paired user.
 
-    It is a subclass of :class:`~django_latch2.mixins.PairedUserRequiredMixin`,
+    It is a subclass of :class:`~django_latch.mixins.PairedUserRequiredMixin`,
     so only authenticated users with the latch configured can access it.
 
     .. automethod:: unpair_account
@@ -66,14 +66,14 @@ class UnpairLatchView(PairedUserRequiredMixin, TemplateView):
 
     NOT_PAIRED_MESSAGE = _("Your account is not paired with Latch.")
 
-    template_name = "django_latch2/unpair_account.html"
-    success_url = reverse_lazy("django_latch2_unpair_complete")
+    template_name = "django_latch/unpair_account.html"
+    success_url = reverse_lazy("django_latch_unpair_complete")
 
     def post(self, request, *args, **kwargs):  # pylint: disable=unused-argument
         """
         Attempt to unpair the user account from the Latch service and
         redirect to the success URL. If a
-        :class:`django_latch2:execptions.UnpairingLatchError` is raised, re-render
+        :class:`django_latch:execptions.UnpairingLatchError` is raised, re-render
         the view and include information about the error in the template context.
         """
 

@@ -1,5 +1,5 @@
 .. _authentication-backends:
-.. module:: django_latch2.backends
+.. module:: django_latch.backends
 
 Authentication backends
 =======================

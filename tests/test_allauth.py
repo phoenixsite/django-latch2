@@ -1,5 +1,5 @@
 """
-Tests for using ``django-latch2``along with
+Tests for using ``django-latch``along with
 `django-allauth <https://allauth.org/>`_.
 """
 
