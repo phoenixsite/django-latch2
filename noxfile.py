@@ -67,7 +67,7 @@ def tests_with_coverage(session, django):
 
     session.install(
         f"Django~={django}.0",
-        ".[tests,requests,httpx]",
+        ".[requests,httpx]",
         "django-allauth",
         "coverage",
         'tomli; python_full_version < "3.11.0a7"',
