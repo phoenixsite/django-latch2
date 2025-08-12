@@ -4,6 +4,12 @@ Minimal Django settings for testing.
 
 # SPDX-License-Identifier: BSD-3-Clause
 
+# Fix it
+# The all-auth app and its middlewares are not necessary
+# for testing the functionalities not related to them,
+# but we need to included them now because otherwise
+# a system check error is raised.
+
 import pathlib
 
 from django.utils.crypto import get_random_string
