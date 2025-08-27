@@ -3,11 +3,11 @@
 django-latch |release|
 =======================
 
-.. important:: **django-latch is still under development**
+.. important:: **django-latch is no longer maintained**
 
-    Though it may seem already suitable for deployment environments, it
-    relies on the `latch_sdk_python <https://github.com/Telefonica/latch-sdk-python>`_,
-    which doesn't have still a stable version.
+    Telfonica halted Latch's service on Septembre 25, 2025,
+    so this project is no longer maintained and will not
+    receive any other update.
 
 Authorship
 ----------
